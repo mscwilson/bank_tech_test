@@ -43,9 +43,11 @@ no overdraft - can't withdraw more than in the account
 no transactions before bank statement print
 deposit or withdraw negative numbers
 deposit or withdraw 0 pounds
-Decimal input
+print 2dp
+check amount given is actually a number
 
+maybe allow string num amounts?
+float input - actually store as pence? what to do if given more than 2dp?
 dates - in future/wrong format - allow strings to be given
 very large amounts deposited
-check amount given is actually a number - maybe allow string nums?
 
