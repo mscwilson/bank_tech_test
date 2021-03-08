@@ -40,13 +40,10 @@ print_statement() - reverse order of transactions
 
 Edge cases:
 no overdraft - can't withdraw more than in the account
+no transactions before bank statement print
+deposit or withdraw negative numbers
+deposit or withdraw 0 pounds
 
 Not round number of pounds ie decimal input
-deposit or withdraw 0 pounds
-no transactions before bank statement print
 dates - in future/wrong format - allow strings to be given
 
-
-Input | Output
-----
-deposit(100) | balance +100

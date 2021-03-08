@@ -10,14 +10,17 @@ class BankAccount
   end
 
   def deposit(amount, date = Time.now)
+    return puts "Please enter a positive amount." if amount.negative? || amount == 0
+
     @balance += amount
     @transactions << { amount: amount, date: date, then_balance: @balance}
   end
 
   def withdraw(amount, date = Time.now)
-    if amount > @balance
-      puts "Insufficient funds."
-      return
+    if amount.negative? || amount == 0
+      return puts "Please enter a positive amount."
+    elsif amount > @balance
+      return puts "Insufficient funds."
     end
 
     @balance -= amount
@@ -25,13 +28,9 @@ class BankAccount
   end
 
   def print_statement
-    if @transactions.length == 0
-      puts "No transactions to show."
-      return
-    end
+    return puts "No transactions to show." if @transactions.length == 0
 
     transaction_strings = [STATEMENT_HEADER]
-
     @transactions.reverse.each do |transaction|
       transaction_strings << render_transaction(transaction)
     end

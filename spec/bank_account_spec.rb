@@ -5,19 +5,42 @@ describe BankAccount do
   let(:account) { BankAccount.new }
   let(:statement_header) { "date || credit || debit || balance\n" }
 
-  it "allows deposits to change balance" do
-    expect{ account.deposit(100) }.to change{ account.balance }.by 100
+  describe "#deposit" do
+    it "adds amount onto balance" do
+      expect{ account.deposit(100) }.to change{ account.balance }.by 100
+    end
+
+    it "prints a warning if a negative amount was given" do
+      expect{ account.deposit(-100) }.to output("Please enter a positive amount.\n").to_stdout
+    end
+
+    it "prints a warning if amount 0 was given" do
+      expect{ account.deposit(0) }.to output("Please enter a positive amount.\n").to_stdout
+    end
   end
 
   describe "#withdraw" do
-    it "allows withdrawals to change balance" do
-      account.deposit(100, Time.now)
+    it "subtracts amount from balance" do
+      account.deposit(100)
       expect{ account.withdraw(100) }.to change{ account.balance }.by -100
     end
 
-    it "prevents withdrawals for more than current balance" do
-      expect{ account.withdraw(100) }.to change{ account.balance }.by 0
+    it "prevents going overdrawn" do
+      expect{ account.withdraw(100) }.not_to change{ account.balance }
+    end
+
+    it "prints a warning if withdrawl amount was greater than balance" do
       expect{ account.withdraw(100) }.to output("Insufficient funds.\n").to_stdout
+    end
+
+    it "prints a warning if a negative amount was given" do
+      account.deposit(100)
+      expect{ account.withdraw(-100) }.to output("Please enter a positive amount.\n").to_stdout
+    end
+
+    it "prints a warning if amount 0 was given" do
+      account.deposit(100)
+      expect{ account.withdraw(0) }.to output("Please enter a positive amount.\n").to_stdout
     end
   end
 
