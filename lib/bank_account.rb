@@ -9,16 +9,27 @@ class BankAccount
     @transactions = []
   end
 
-  def deposit(amount, date)
+  def deposit(amount, date = Time.now)
     @balance += amount
     @transactions << { amount: amount, date: date, then_balance: @balance}
   end
 
-  def withdraw(amount, date)
+  def withdraw(amount, date = Time.now)
+    if amount > @balance
+      puts "Insufficient funds."
+      return
+    end
+
     @balance -= amount
+    @transactions << { amount: -amount, date: date, then_balance: @balance}
   end
 
   def print_statement
+    if @transactions.length == 0
+      puts "No transactions to show."
+      return
+    end
+
     transaction_strings = [STATEMENT_HEADER]
 
     @transactions.reverse.each do |transaction|
@@ -28,12 +39,18 @@ class BankAccount
     print transaction_strings.join("\n")
   end
 
+  private #--------------------------------------------------
+
   def render_transaction(transaction)
     date = transaction[:date].strftime('%d/%m/%Y')
     amount = transaction[:amount]
     then_balance = transaction[:then_balance]
 
-    "#{date} || #{amount}.00 || || #{then_balance}.00"
+    if amount.positive?
+      "#{date} || #{amount}.00 || || #{then_balance}.00"
+    else
+      "#{date} || || #{-amount}.00 || #{then_balance}.00"
+    end
   end
 
 end
