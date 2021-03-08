@@ -11,11 +11,15 @@ describe BankAccount do
     end
 
     it "prints a warning if a negative amount was given" do
-      expect{ account.deposit(-100) }.to output("Please enter a positive amount.\n").to_stdout
+      expect{ account.deposit(-100) }.to output("Please enter a positive number.\n").to_stdout
     end
 
     it "prints a warning if amount 0 was given" do
-      expect{ account.deposit(0) }.to output("Please enter a positive amount.\n").to_stdout
+      expect{ account.deposit(0) }.to output("Please enter a positive number.\n").to_stdout
+    end
+
+    it "checks if the amount is a number" do
+      expect{ account.deposit("hello") }.to output("Please enter a positive number.\n").to_stdout
     end
   end
 
@@ -35,12 +39,16 @@ describe BankAccount do
 
     it "prints a warning if a negative amount was given" do
       account.deposit(100)
-      expect{ account.withdraw(-100) }.to output("Please enter a positive amount.\n").to_stdout
+      expect{ account.withdraw(-100) }.to output("Please enter a positive number.\n").to_stdout
     end
 
     it "prints a warning if amount 0 was given" do
       account.deposit(100)
-      expect{ account.withdraw(0) }.to output("Please enter a positive amount.\n").to_stdout
+      expect{ account.withdraw(0) }.to output("Please enter a positive number.\n").to_stdout
+    end
+
+    it "checks if the amount is a number" do
+      expect{ account.withdraw("hello") }.to output("Please enter a positive number.\n").to_stdout
     end
   end
 
@@ -52,7 +60,6 @@ describe BankAccount do
     end
 
     it "prints details of a deposit from today" do
-      # date = Time.now
       transaction = "#{Time.now.strftime('%d/%m/%Y')} || 100.00 || || 100.00"
       account.deposit(100)
       expect{ account.print_statement }.to output(statement_header + transaction).to_stdout
@@ -82,6 +89,12 @@ describe BankAccount do
 
     it "says 'No transactions' if appropriate" do
       expect{ account.print_statement }.to output("No transactions to show.\n").to_stdout
+    end
+
+    it "prints two decimal places" do
+      account.deposit(100.34922)
+      full_statement = statement_header + "#{Time.now.strftime('%d/%m/%Y')} || 100.35 || || 100.35"
+      expect{ account.print_statement }.to output(full_statement).to_stdout
     end
   end
 end

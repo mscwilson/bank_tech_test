@@ -10,18 +10,15 @@ class BankAccount
   end
 
   def deposit(amount, date = Time.now)
-    return puts "Please enter a positive amount." if amount.negative? || amount == 0
+    return puts "Please enter a positive number." if !valid_amount?(amount)
 
     @balance += amount
     @transactions << { amount: amount, date: date, then_balance: @balance}
   end
 
   def withdraw(amount, date = Time.now)
-    if amount.negative? || amount == 0
-      return puts "Please enter a positive amount."
-    elsif amount > @balance
-      return puts "Insufficient funds."
-    end
+    return puts "Please enter a positive number." if !valid_amount?(amount)
+    return puts "Insufficient funds." if amount > @balance
 
     @balance -= amount
     @transactions << { amount: -amount, date: date, then_balance: @balance}
@@ -46,10 +43,14 @@ class BankAccount
     then_balance = transaction[:then_balance]
 
     if amount.positive?
-      "#{date} || #{amount}.00 || || #{then_balance}.00"
+      "#{date} || #{"%.2f" % amount} || || #{"%.2f" % then_balance}"
     else
-      "#{date} || || #{-amount}.00 || #{then_balance}.00"
+      "#{date} || || #{"%.2f" % -amount} || #{"%.2f" % then_balance}"
     end
+  end
+
+  def valid_amount?(amount)
+    amount.is_a?(Numeric) && amount.positive? && amount != 0
   end
 
 end

@@ -43,7 +43,9 @@ no overdraft - can't withdraw more than in the account
 no transactions before bank statement print
 deposit or withdraw negative numbers
 deposit or withdraw 0 pounds
+Decimal input
 
-Not round number of pounds ie decimal input
 dates - in future/wrong format - allow strings to be given
+very large amounts deposited
+check amount given is actually a number - maybe allow string nums?
 
