@@ -2,6 +2,8 @@ class BankAccount
 
   attr_reader :balance
 
+  STATEMENT_HEADER = "date || credit || debit || balance"
+
   def initialize
     @balance = 0
     @transactions = []
@@ -9,7 +11,7 @@ class BankAccount
 
   def deposit(amount, date)
     @balance += amount
-    @transactions << { amount: amount, date: date }
+    @transactions << { amount: amount, date: date, then_balance: @balance}
   end
 
   def withdraw(amount, date)
@@ -17,10 +19,21 @@ class BankAccount
   end
 
   def print_statement
-    header = "date || credit || debit || balance"
-    transaction = "#{@transactions[-1][:date].strftime('%d/%m/%Y')} || 1000.00 || || 1000.00"
+    transaction_strings = [STATEMENT_HEADER]
 
-    print header + "\n" + transaction
+    @transactions.reverse.each do |transaction|
+      transaction_strings << render_transaction(transaction)
+    end
+
+    print transaction_strings.join("\n")
+  end
+
+  def render_transaction(transaction)
+    date = transaction[:date].strftime('%d/%m/%Y')
+    amount = transaction[:amount]
+    then_balance = transaction[:then_balance]
+
+    "#{date} || #{amount}.00 || || #{then_balance}.00"
   end
 
 end
