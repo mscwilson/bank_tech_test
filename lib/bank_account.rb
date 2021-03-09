@@ -8,22 +8,22 @@ class BankAccount
     @transactions = []
   end
 
-  def deposit(amount, date = Time.now)
+  def deposit(amount)
     amount = Float(amount) if amount.is_a?(String) && valid_number?(amount)
     return puts 'Please enter a positive number.' unless valid_amount?(amount)
     return puts "Unable to process large deposit. Please speak to your bank manager." if amount >= 10000
 
     @balance += amount
-    @transactions << { amount: amount, date: date, then_balance: @balance }
+    @transactions << { amount: amount, date: Time.now, then_balance: @balance }
   end
 
-  def withdraw(amount, date = Time.now)
+  def withdraw(amount)
     return puts 'Please enter a positive number.' unless valid_amount?(amount)
     return puts 'Insufficient funds.' if amount > @balance
     return puts 'Amount exceeds daily limit. Please speak to your bank manager to withdraw large sums.' if amount > 2500
 
     @balance -= amount
-    @transactions << { amount: -amount, date: date, then_balance: @balance }
+    @transactions << { amount: -amount, date: Time.now, then_balance: @balance }
   end
 
   def print_statement

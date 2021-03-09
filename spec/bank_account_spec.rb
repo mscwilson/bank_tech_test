@@ -66,35 +66,29 @@ describe BankAccount do
   end
 
   describe '#print_statement' do
-    it 'prints out a statement from given data' do
-      transaction = '10/01/2012 || 1000.00 || || 1000.00'
-      account.deposit(1000, Time.new(2012, 1, 10))
-      expect { account.print_statement }.to output(statement_header + transaction + "\n").to_stdout
-    end
-
-    it 'prints details of a deposit from today' do
-      transaction = "#{Time.now.strftime('%d/%m/%Y')} || 100.00 || || 100.00"
+    it 'prints details of a deposit' do
       account.deposit(100)
+      transaction = "#{Time.now.strftime('%d/%m/%Y')} || 100.00 || || 100.00"
       expect { account.print_statement }.to output(statement_header + transaction + "\n").to_stdout
     end
 
     it 'shows the balance at the time of transaction on statement' do
-      account.deposit(100, Time.new(2012, 1, 10))
-      account.deposit(100, Time.new(2012, 1, 11))
+      account.deposit(100)
+      account.deposit(100)
 
-      transaction_str1 = "11/01/2012 || 100.00 || || 200.00\n"
-      transaction_str2 = '10/01/2012 || 100.00 || || 100.00'
+      transaction_str1 = "#{Time.now.strftime('%d/%m/%Y')} || 100.00 || || 200.00\n"
+      transaction_str2 = "#{Time.now.strftime('%d/%m/%Y')} || 100.00 || || 100.00"
       full_statement = statement_header + transaction_str1 + transaction_str2 + "\n"
 
       expect { account.print_statement }.to output(full_statement).to_stdout
     end
 
     it 'prints details of a withdrawal' do
-      account.deposit(1000, Time.new(2012, 1, 10))
-      account.withdraw(500, Time.new(2012, 1, 14))
+      account.deposit(1000)
+      account.withdraw(500)
 
-      transaction_str1 = "14/01/2012 || || 500.00 || 500.00\n"
-      transaction_str2 = '10/01/2012 || 1000.00 || || 1000.00'
+      transaction_str1 = "#{Time.now.strftime('%d/%m/%Y')} || || 500.00 || 500.00\n"
+      transaction_str2 = "#{Time.now.strftime('%d/%m/%Y')} || 1000.00 || || 1000.00"
       full_statement = statement_header + transaction_str1 + transaction_str2 + "\n"
 
       expect { account.print_statement }.to output(full_statement).to_stdout

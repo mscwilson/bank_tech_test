@@ -46,8 +46,9 @@ deposit or withdraw 0 pounds
 print 2dp
 check amount given is actually a number
 maybe allow string num amounts?
+very large amounts deposited £10 000 withdraw £2500
 
 float input - actually store as pence? what to do if given more than 2dp?
 dates - in future/wrong format - allow strings to be given
-very large amounts deposited £10 000 withdraw £2500
 
+NB magic numbers
