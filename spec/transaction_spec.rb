@@ -18,37 +18,33 @@ describe Transaction do
 
     it "stores the date" do
       allow(Time).to receive(:now).and_return("14/01/2012")
-      transaction = Transaction.new(DEFAULT_TRANSACTION_AMOUNT)
       expect(transaction.date).to eq "14/01/2012"
     end
 
     it "shows the new balance post transaction" do
       allow_any_instance_of(Transaction).to receive(:successful?).and_return true
       allow_any_instance_of(Transaction).to receive(:calculate_new_balance).and_return DEFAULT_TRANSACTION_AMOUNT
-      transaction = Transaction.new(DEFAULT_TRANSACTION_AMOUNT)
       expect(transaction.new_balance).to eq DEFAULT_TRANSACTION_AMOUNT
     end
   end
 
   describe "#successful?" do
-    it "true if valid_transaction_amount? is true" do
+    before do
       allow_any_instance_of(Transaction).to receive(:valid_transaction_amount?).and_return true
       allow_any_instance_of(Transaction).to receive(:within_max_limit?).and_return true
-      transaction = Transaction.new(DEFAULT_TRANSACTION_AMOUNT)
+    end
+
+    it "true if valid_transaction_amount? is true" do
       expect(transaction.successful?).to be true
     end
 
     it "false if within_max_limit? is false" do
-      allow_any_instance_of(Transaction).to receive(:valid_transaction_amount?).and_return true
       allow_any_instance_of(Transaction).to receive(:within_max_limit?).and_return false
-      transaction = Transaction.new(DEFAULT_TRANSACTION_AMOUNT)
       expect(transaction.successful?).to be false
     end
 
     it "false if valid_transaction_amount? is false" do
       allow_any_instance_of(Transaction).to receive(:valid_transaction_amount?).and_return false
-      allow_any_instance_of(Transaction).to receive(:within_max_limit?).and_return true
-      transaction = Transaction.new(DEFAULT_TRANSACTION_AMOUNT)
       expect(transaction.successful?).to be false
     end
   end
@@ -56,19 +52,16 @@ describe Transaction do
   describe "#error_message" do
     it "'unable to process large amount' if within_max_limit? false" do
       allow_any_instance_of(Transaction).to receive(:within_max_limit?).and_return false
-      transaction = Transaction.new(DEFAULT_TRANSACTION_AMOUNT)
       expect(transaction.error_message).to eq "Unable to process large deposit. Please speak to your bank manager."
     end
 
     it "'enter a positive number' if valid_transaction_amount? false" do
       allow_any_instance_of(Transaction).to receive(:valid_transaction_amount?).and_return false
-      transaction = Transaction.new(DEFAULT_TRANSACTION_AMOUNT)
       expect(transaction.error_message).to eq "Please enter a positive number."
     end
 
     it "'N/A' if transaction successful?" do
       allow_any_instance_of(Transaction).to receive(:successful?).and_return true
-      transaction = Transaction.new(DEFAULT_TRANSACTION_AMOUNT)
       expect(transaction.error_message).to eq "N/A"
     end
   end
@@ -92,8 +85,6 @@ describe Transaction do
   end
 
   describe "#valid_transaction_amount" do
-    let(:transaction) { Transaction.new(DEFAULT_TRANSACTION_AMOUNT) }
-
     before do
       allow(transaction).to receive(:valid_number?).and_return true
       allow(transaction).to receive(:within_max_limit?).and_return true
@@ -113,8 +104,8 @@ describe Transaction do
   end
 
   describe "#within_max_limit?" do
-    it "returns false for 10000" do
-      expect(transaction.within_max_limit?(10_000)).to be false
+    it "returns false for 10 000" do
+      expect(transaction.within_max_limit?(Transaction::MAXIMUM_LIMIT)).to be false
     end
 
     it "returns true for 100" do

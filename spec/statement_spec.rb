@@ -67,8 +67,9 @@ describe Statement do
     end
 
     it "has header and appropriate transaction info" do
-      expected_info = "#{Time.now.strftime('%d/%m/%Y')} || 100.00 || || 100.00"
+      expected_info = DEFAULT_TRANSACTION_STR
       final_string = "#{Statement::HEADER}\n#{expected_info}"
+
       allow(statement).to receive(:transactions?).and_return true
       allow(statement).to receive(:transactions_to_strings).and_return [Statement::HEADER, expected_info]
       expect(statement.final_output).to eq final_string
