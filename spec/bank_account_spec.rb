@@ -9,7 +9,7 @@ describe BankAccount do
       @fake_deposit = double(:deposit)
       allow(account).to receive(:create_deposit).and_return @fake_deposit
       allow(@fake_deposit).to receive(:successful?).and_return true
-      allow(@fake_deposit).to receive(:amount).and_return 100
+      allow(@fake_deposit).to receive(:new_balance).and_return 100
     end
 
     it "adds amount onto balance if transaction was successful" do
@@ -30,38 +30,29 @@ describe BankAccount do
   end
 
   describe "#withdraw" do
+    before do
+      @fake_withdrawal = double(:withdrawal)
+      allow(account).to receive(:create_withdrawal).and_return @fake_withdrawal
+
+      allow(@fake_withdrawal).to receive(:successful?).and_return true
+      allow(@fake_withdrawal).to receive(:new_balance).and_return 100
+    end
+
     it "subtracts amount from balance" do
-      account.deposit(100)
+      allow(account).to receive(:balance).and_return(100, account.balance)
       expect { account.withdraw(100) }.to change { account.balance }.by(-100)
     end
 
-    it "prevents going overdrawn" do
+    it "doesn't change balance if transaction unsuccessful" do
+      allow(@fake_withdrawal).to receive(:successful?).and_return false
+      allow(@fake_withdrawal).to receive(:error)
       expect { account.withdraw(100) }.not_to change { account.balance }
     end
 
-    it "prints a warning if withdrawl amount was greater than balance" do
-      expect { account.withdraw(100) }.to output("Insufficient funds.\n").to_stdout
-    end
-
-    it "prints a warning if a negative amount was given" do
-      account.deposit(100)
-      expect { account.withdraw(-100) }.to output("Please enter a positive number.\n").to_stdout
-    end
-
-    it "prints a warning if amount 0 was given" do
-      account.deposit(100)
-      expect { account.withdraw(0) }.to output("Please enter a positive number.\n").to_stdout
-    end
-
-    it "checks if the amount is a number" do
-      expect { account.withdraw("hello") }.to output("Please enter a positive number.\n").to_stdout
-    end
-
-    it "prevents large withdrawals" do
-      account.deposit(3000)
-      expect do
-        account.withdraw(2501)
-      end.to output("Amount exceeds daily limit. Please speak to your bank manager to withdraw large sums.\n").to_stdout
+    it "prints out error message if transaction unsuccessful" do
+      allow(@fake_withdrawal).to receive(:successful?).and_return false
+      allow(@fake_withdrawal).to receive(:error).and_return "Please enter a positive number."
+      expect { account.withdraw(100) }.to output("Please enter a positive number.\n").to_stdout
     end
   end
 

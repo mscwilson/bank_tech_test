@@ -1,4 +1,5 @@
 require_relative "deposit"
+require_relative "withdrawal"
 
 class BankAccount
   attr_reader :balance
@@ -12,22 +13,18 @@ class BankAccount
 
   def deposit(amount)
     deposit = create_deposit(amount)
-    deposit.successful? ? (@balance += deposit.amount) : (puts deposit.error)
+    deposit.successful? ? (@balance = deposit.new_balance) : (puts deposit.error)
     @transactions << deposit
   end
 
   def withdraw(amount)
-    return puts "Please enter a positive number." unless valid_transaction_amount?(amount)
-    return puts "Insufficient funds." if amount > @balance
-    return puts "Amount exceeds daily limit. Please speak to your bank manager to withdraw large sums." if amount > 2500
-
-    @balance -= amount
-    @transactions << { amount: -amount, date: Time.now, new_balance: @balance }
+    withdrawal = create_withdrawal(amount)
+    withdrawal.successful? ? (@balance = withdrawal.new_balance) : (puts withdrawal.error)
+    @transactions << withdrawal
   end
 
   def print_statement
     return puts "No transactions to show." if @transactions.length == 0
-
     puts transactions_to_strings.join("\n")
   end
 
@@ -35,6 +32,10 @@ class BankAccount
 
   def create_deposit(amount)
     Deposit.new(amount, @balance)
+  end
+
+  def create_withdrawal(amount)
+    Withdrawal.new(amount, @balance)
   end
 
   def valid_number?(number)

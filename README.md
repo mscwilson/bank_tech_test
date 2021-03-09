@@ -70,3 +70,4 @@ NB Transaction @date is poorly named?
 NB how to stub @successful? without allow_any_instance_of
 NB skip unsuccessful transactions in printing
 NB fix inheritance of Transaction within_max_limit?
+NB make private as appropriate
