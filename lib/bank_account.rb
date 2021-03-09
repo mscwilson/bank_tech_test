@@ -1,8 +1,7 @@
 class BankAccount
-
   attr_reader :balance
 
-  STATEMENT_HEADER = "date || credit || debit || balance"
+  STATEMENT_HEADER = 'date || credit || debit || balance'
 
   def initialize
     @balance = 0
@@ -10,38 +9,39 @@ class BankAccount
   end
 
   def deposit(amount, date = Time.now)
-    if amount.is_a? String
-      begin
-        amount = Float(amount)
-      rescue
-        return puts "Please enter a positive number."
-      end
-    end
-
-    return puts "Please enter a positive number." if !valid_amount?(amount)
+    amount = Float(amount) if amount.is_a?(String) && valid_number?(amount)
+    return puts 'Please enter a positive number.' unless valid_amount?(amount)
+    return puts "Unable to process large deposit. Please speak to your bank manager." if amount >= 10000
 
     @balance += amount
-    @transactions << { amount: amount, date: date, then_balance: @balance}
+    @transactions << { amount: amount, date: date, then_balance: @balance }
   end
 
   def withdraw(amount, date = Time.now)
-    return puts "Please enter a positive number." if !valid_amount?(amount)
-    return puts "Insufficient funds." if amount > @balance
+    return puts 'Please enter a positive number.' unless valid_amount?(amount)
+    return puts 'Insufficient funds.' if amount > @balance
+    return puts 'Amount exceeds daily limit. Please speak to your bank manager to withdraw large sums.' if amount > 2500
 
     @balance -= amount
-    @transactions << { amount: -amount, date: date, then_balance: @balance}
+    @transactions << { amount: -amount, date: date, then_balance: @balance }
   end
 
   def print_statement
-    return puts "No transactions to show." if @transactions.length == 0
+    return puts 'No transactions to show.' if @transactions.length == 0
 
-    print transactions_to_strings.join("\n")
+    puts transactions_to_strings.join("\n")
   end
 
   private #--------------------------------------------------
 
+  def valid_number?(number)
+    true if Float(number)
+    rescue StandardError
+    false
+  end
+
   def valid_amount?(amount)
-    amount.is_a?(Numeric) && amount.positive? && amount != 0
+    valid_number?(amount) && amount.positive? && amount != 0
   end
 
   def transactions_to_strings
@@ -58,10 +58,9 @@ class BankAccount
     then_balance = transaction[:then_balance]
 
     if amount.positive?
-      "#{date} || #{"%.2f" % amount} || || #{"%.2f" % then_balance}"
+      "#{date} || #{'%.2f' % amount} || || #{'%.2f' % then_balance}"
     else
-      "#{date} || || #{"%.2f" % -amount} || #{"%.2f" % then_balance}"
+      "#{date} || || #{'%.2f' % -amount} || #{'%.2f' % then_balance}"
     end
   end
-
 end
