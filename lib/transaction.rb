@@ -1,6 +1,6 @@
 class Transaction
 
-  attr_reader :amount, :date, :balance
+  attr_reader :amount, :date, :balance, :successful
 
   MAXIMUM_DEPOSIT_LIMIT = 10_000
 
@@ -8,10 +8,15 @@ class Transaction
     @amount = amount
     @date = Time.now
     @balance = balance
+    @successful = valid_transaction_amount?(@amount)
   end
 
   def error
     "Please enter a positive number." unless valid_transaction_amount?(@amount)
+  end
+
+  def successful?
+    @successful
   end
 
   def valid_number?(number)

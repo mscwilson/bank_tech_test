@@ -66,4 +66,5 @@ very large amounts deposited £10 000 withdraw £2500
 
 float input - actually store as pence? what to do if given more than 2dp?
 NB magic numbers
-NB @date is poorly named
+NB Transaction @date is poorly named
+NB how to stub @successful? without allow_any_instance_of

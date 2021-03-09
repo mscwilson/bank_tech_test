@@ -20,6 +20,20 @@ describe Transaction do
     end
   end
 
+  describe "#successful?" do
+    it "true if valid_transaction_amount? is true" do
+      allow_any_instance_of(Transaction).to receive(:valid_transaction_amount?).and_return true
+      transaction = Transaction.new(100)
+      expect(transaction.successful?).to be true
+    end
+
+    it "false if valid_transaction_amount? is false" do
+      allow_any_instance_of(Transaction).to receive(:valid_transaction_amount?).and_return false
+      transaction = Transaction.new(100)
+      expect(transaction.successful?).to be false
+    end
+  end
+
   # it "returns a warning if a negative amount was given" do
   #   transaction = Transaction.new(-100)
   #   expect(transaction.error).to eq "Please enter a positive number."
