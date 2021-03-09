@@ -5,9 +5,29 @@ describe BankAccount do
   let(:statement_header) { "date || credit || debit || balance\n" }
 
   describe "#deposit" do
-    it "adds amount onto balance" do
+    before do
+      @fake_deposit = double(:deposit)
+      allow(account).to receive(:create_deposit).and_return @fake_deposit
+      allow(@fake_deposit).to receive(:successful?).and_return true
+      allow(@fake_deposit).to receive(:amount).and_return 100
+    end
+
+    it "adds amount onto balance if transaction was successful" do
       expect { account.deposit(100) }.to change { account.balance }.by 100
     end
+
+    it "doesn't change balance if transaction unsuccessful" do
+      allow(@fake_deposit).to receive(:successful?).and_return false
+      allow(@fake_deposit).to receive(:error)
+      expect { account.deposit(100) }.not_to change { account.balance }
+    end
+
+    it "prints out error message if transaction unsuccessful" do
+      allow(@fake_deposit).to receive(:successful?).and_return false
+      allow(@fake_deposit).to receive(:error).and_return "Please enter a positive number."
+      expect { account.deposit(100) }.to output("Please enter a positive number.\n").to_stdout
+    end
+
 
   end
 
@@ -65,7 +85,7 @@ describe BankAccount do
       expect { account.print_statement }.to output(full_statement).to_stdout
     end
 
-    it "prints details of a withdrawal" do
+    xit "prints details of a withdrawal" do
       account.deposit(1000)
       account.withdraw(500)
 

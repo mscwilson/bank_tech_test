@@ -1,3 +1,5 @@
+require_relative "deposit"
+
 class BankAccount
   attr_reader :balance
 
@@ -9,12 +11,9 @@ class BankAccount
   end
 
   def deposit(amount)
-    amount = Float(amount) if amount.is_a?(String) && valid_number?(amount)
-    return puts "Please enter a positive number." unless valid_transaction_amount?(amount)
-    return puts "Unable to process large deposit. Please speak to your bank manager." if amount >= 10000
-
-    @balance += amount
-    @transactions << { amount: amount, date: Time.now, then_balance: @balance }
+    deposit = create_deposit(amount)
+    deposit.successful? ? (@balance += deposit.amount) : (puts deposit.error)
+    @transactions << deposit
   end
 
   def withdraw(amount)
@@ -23,7 +22,7 @@ class BankAccount
     return puts "Amount exceeds daily limit. Please speak to your bank manager to withdraw large sums." if amount > 2500
 
     @balance -= amount
-    @transactions << { amount: -amount, date: Time.now, then_balance: @balance }
+    @transactions << { amount: -amount, date: Time.now, new_balance: @balance }
   end
 
   def print_statement
@@ -33,6 +32,10 @@ class BankAccount
   end
 
   private #--------------------------------------------------
+
+  def create_deposit(amount)
+    Deposit.new(amount, @balance)
+  end
 
   def valid_number?(number)
     true if Float(number)
@@ -53,14 +56,14 @@ class BankAccount
   end
 
   def render_single_transaction(transaction)
-    date = transaction[:date].strftime("%d/%m/%Y")
-    amount = transaction[:amount]
-    then_balance = transaction[:then_balance]
+    date = transaction.date.strftime("%d/%m/%Y")
+    amount = transaction.amount
+    new_balance = transaction.new_balance
 
     if amount.positive?
-      "#{date} || #{'%.2f' % amount} || || #{'%.2f' % then_balance}"
+      "#{date} || #{'%.2f' % amount} || || #{'%.2f' % new_balance}"
     else
-      "#{date} || || #{'%.2f' % -amount} || #{'%.2f' % then_balance}"
+      "#{date} || || #{'%.2f' % -amount} || #{'%.2f' % new_balance}"
     end
   end
 end

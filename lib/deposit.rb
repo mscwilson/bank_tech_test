@@ -1,19 +1,5 @@
-class Deposit
-  def initialize(amount)
-    @amount = amount
-  end
+require_relative "transaction"
 
-  def error
-    "Please enter a positive number." unless valid_transaction_amount?(@amount)
-  end
+class Deposit < Transaction
 
-  def valid_number?(number)
-    true if Float(number)
-  rescue StandardError
-    false
-  end
-
-  def valid_transaction_amount?(amount)
-    valid_number?(amount) && amount.positive? && amount != 0
-  end
 end

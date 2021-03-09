@@ -20,10 +20,12 @@ describe Transaction do
       expect(transaction.date).to eq "14/01/2012"
     end
 
-    it "stores the balance given" do
-      transaction = Transaction.new(100, 1000)
-      expect(transaction.balance).to eq 1000
+    it "calculates the new balance post transaction" do
+      allow_any_instance_of(Transaction).to receive(:successful?).and_return true
+      transaction = Transaction.new(100)
+      expect(transaction.new_balance).to eq 100
     end
+
   end
 
   describe "#successful?" do
@@ -115,4 +117,10 @@ describe Transaction do
       expect(transaction.convert_to_number("100")).to eq 100
     end
   end
+
+  # describe "#new_balance" do
+  #   it "calculates the balance after the transaction goes through" do
+  #     expect(transaction.new_balance).to eq 100
+  #   end
+  # end
 end
