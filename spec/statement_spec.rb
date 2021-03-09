@@ -9,8 +9,8 @@ describe Statement do
     before do
       @fake_transaction = double(:deposit)
       allow(@fake_transaction).to receive(:date).and_return Time.now
-      allow(@fake_transaction).to receive(:amount).and_return 100
-      allow(@fake_transaction).to receive(:new_balance).and_return 100
+      allow(@fake_transaction).to receive(:amount).and_return DEFAULT_TRANSACTION_AMOUNT
+      allow(@fake_transaction).to receive(:new_balance).and_return DEFAULT_TRANSACTION_AMOUNT
     end
 
     it "returns the correct string for a deposit" do
@@ -59,9 +59,9 @@ describe Statement do
     end
   end
 
-  # it "prints two decimal places" do
-  #   account.deposit(100.34922)
-  #   full_statement = statement_header + "#{Time.now.strftime('%d/%m/%Y')} || 100.35 || || 100.35"
-  #   expect { account.print_statement }.to output(full_statement + "\n").to_stdout
-  # end
+  xit "prints two decimal places" do
+    account.deposit(100.34922)
+    full_statement = statement_header + "#{Time.now.strftime('%d/%m/%Y')} || 100.35 || || 100.35"
+    expect { account.print_statement }.to output(full_statement + "\n").to_stdout
+  end
 end
