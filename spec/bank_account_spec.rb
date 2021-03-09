@@ -15,7 +15,7 @@ describe BankAccount do
     end
 
     it "adds amount onto balance if transaction was successful" do
-      expect { account.deposit(DEFAULT_TRANSACTION_AMOUNT) }.to change { account.balance }.by DEFAULT_TRANSACTION_AMOUNT
+      expect { account.deposit(DEFAULT_TRANSACTION_AMOUNT) }.to change{ account.balance }.by DEFAULT_TRANSACTION_AMOUNT
     end
 
     it "doesn't change balance if transaction unsuccessful" do
@@ -41,7 +41,9 @@ describe BankAccount do
 
     it "subtracts amount from balance" do
       allow(account).to receive(:balance).and_return(DEFAULT_TRANSACTION_AMOUNT, account.balance)
-      expect { account.withdraw(DEFAULT_TRANSACTION_AMOUNT) }.to change { account.balance }.by(-DEFAULT_TRANSACTION_AMOUNT)
+      expect { account.withdraw(DEFAULT_TRANSACTION_AMOUNT) }.to change {
+                                                                   account.balance
+                                                                 }.by(-DEFAULT_TRANSACTION_AMOUNT)
     end
 
     it "doesn't change balance if transaction unsuccessful" do

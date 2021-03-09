@@ -4,6 +4,7 @@ require_relative "deposit"
 require_relative "withdrawal"
 require_relative "statement"
 
+# BankAccount stores a balance and allows user to withdraw and deposit money
 class BankAccount
   attr_reader :balance
 
@@ -41,6 +42,4 @@ class BankAccount
   def create_statement
     Statement.new(@transactions)
   end
-
-
 end

@@ -63,11 +63,12 @@ print 2dp
 check amount given is actually a number
 maybe allow string num amounts?
 very large amounts deposited £10 000 withdraw £2500
+NB skip unsuccessful transactions in printing
 
 float input - actually store as pence? what to do if given more than 2dp?
 NB magic numbers
 NB Transaction @date is poorly named?
 NB how to stub @successful? without allow_any_instance_of
-NB skip unsuccessful transactions in printing
 NB fix inheritance of Transaction within_max_limit?
 NB make private as appropriate
+£10000 limit is for one day actually, not per transaction
