@@ -2,6 +2,6 @@
 
 require_relative "transaction"
 
+# Stores info about deposits to use with BankAccount
 class Deposit < Transaction
-  # MAXIMUM_LIMIT = 10_000
 end

@@ -21,7 +21,7 @@ describe BankAccount do
     it "doesn't change balance if transaction unsuccessful" do
       allow(@fake_deposit).to receive(:successful?).and_return false
       allow(@fake_deposit).to receive(:error)
-      expect { account.deposit(DEFAULT_TRANSACTION_AMOUNT) }.not_to change { account.balance }
+      expect { account.deposit(DEFAULT_TRANSACTION_AMOUNT) }.not_to change{ account.balance }
     end
 
     it "prints out error message if transaction unsuccessful" do

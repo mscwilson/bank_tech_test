@@ -2,6 +2,7 @@
 
 require_relative "deposit"
 
+# Converts a list of Transaction objects into a statement to print out
 class Statement
   HEADER = "date || credit || debit || balance"
 
@@ -11,8 +12,8 @@ class Statement
 
   def render_single_transaction(transaction)
     date = transaction.date.strftime("%d/%m/%Y")
-    amount = format('%.2f', transaction.amount)
-    new_balance = format('%.2f', transaction.new_balance)
+    amount = format("%.2f", transaction.amount)
+    new_balance = format("%.2f", transaction.new_balance)
 
     deposit_str = "#{date} || #{amount} || || #{new_balance}"
     withdrawal_str = "#{date} || || #{amount} || #{new_balance}"

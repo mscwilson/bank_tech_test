@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Stores transaction info. Parent of Withdrawal and Deposit
 class Transaction
   attr_reader :amount, :date, :error, :new_balance
 

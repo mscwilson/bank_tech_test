@@ -2,6 +2,7 @@
 
 require_relative "transaction"
 
+# Stores info about withdrawals to use with BankAccount
 class Withdrawal < Transaction
   MAXIMUM_LIMIT = 2500
 

@@ -3,7 +3,6 @@
 require "bank_account"
 
 describe "using the bank account" do
-
   let(:account) { BankAccount.new }
 
   it "making transactions then getting a statement" do
@@ -38,7 +37,4 @@ describe "using the bank account" do
 
     expect { account.print_statement }.to output(expected).to_stdout
   end
-
-
-
 end
