@@ -11,14 +11,6 @@ describe BankAccount do
 
 
 
-    it "prints a warning if amount 0 was given" do
-      expect { account.deposit(0) }.to output("Please enter a positive number.\n").to_stdout
-    end
-
-    it "checks if the amount is a number" do
-      expect { account.deposit(false) }.to output("Please enter a positive number.\n").to_stdout
-    end
-
     it "allows amounts to be given as a string" do
       expect { account.deposit("100") }.to change { account.balance }.by 100
     end
