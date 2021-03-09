@@ -20,8 +20,9 @@ describe Transaction do
       expect(transaction.date).to eq "14/01/2012"
     end
 
-    it "calculates the new balance post transaction" do
+    it "shows the new balance post transaction" do
       allow_any_instance_of(Transaction).to receive(:successful?).and_return true
+      allow_any_instance_of(Transaction).to receive(:calculate_new_balance).and_return 100
       transaction = Transaction.new(100)
       expect(transaction.new_balance).to eq 100
     end
@@ -31,12 +32,21 @@ describe Transaction do
   describe "#successful?" do
     it "true if valid_transaction_amount? is true" do
       allow_any_instance_of(Transaction).to receive(:valid_transaction_amount?).and_return true
+      allow_any_instance_of(Transaction).to receive(:within_max_limit?).and_return true
       transaction = Transaction.new(100)
       expect(transaction.successful?).to be true
     end
 
+    it "false if within_max_limit? is false" do
+      allow_any_instance_of(Transaction).to receive(:valid_transaction_amount?).and_return true
+      allow_any_instance_of(Transaction).to receive(:within_max_limit?).and_return false
+      transaction = Transaction.new(100)
+      expect(transaction.successful?).to be false
+    end
+
     it "false if valid_transaction_amount? is false" do
       allow_any_instance_of(Transaction).to receive(:valid_transaction_amount?).and_return false
+      allow_any_instance_of(Transaction).to receive(:within_max_limit?).and_return true
       transaction = Transaction.new(100)
       expect(transaction.successful?).to be false
     end
@@ -118,9 +128,9 @@ describe Transaction do
     end
   end
 
-  # describe "#new_balance" do
-  #   it "calculates the balance after the transaction goes through" do
-  #     expect(transaction.new_balance).to eq 100
-  #   end
-  # end
+  describe "#calculate_new_balance" do
+    it "adds current balance and transaction amount" do
+      expect(transaction.calculate_new_balance).to eq 100
+    end
+  end
 end

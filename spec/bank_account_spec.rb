@@ -27,8 +27,6 @@ describe BankAccount do
       allow(@fake_deposit).to receive(:error).and_return "Please enter a positive number."
       expect { account.deposit(100) }.to output("Please enter a positive number.\n").to_stdout
     end
-
-
   end
 
   describe "#withdraw" do

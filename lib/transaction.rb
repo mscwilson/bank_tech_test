@@ -2,13 +2,13 @@ class Transaction
 
   attr_reader :amount, :date, :error, :new_balance
 
-  MAXIMUM_DEPOSIT_LIMIT = 10_000
+  MAXIMUM_LIMIT = 10_000
 
   def initialize(amount, balance = 0)
     @amount = (amount.is_a?(String) && valid_number?(amount)) ? convert_to_number(amount) : amount
-    @successful = valid_transaction_amount?(@amount)
     @date = Time.now
-    @new_balance = successful? ? balance + @amount : balance
+    @balance = balance
+    @new_balance = successful? ? calculate_new_balance : @balance
     @error = error_message
   end
 
@@ -19,7 +19,7 @@ class Transaction
   end
 
   def successful?
-    @successful
+    valid_transaction_amount?(@amount) && within_max_limit?(@amount)
   end
 
   def convert_to_number(number)
@@ -33,11 +33,15 @@ class Transaction
   end
 
   def within_max_limit?(number)
-    number < MAXIMUM_DEPOSIT_LIMIT
+    number < MAXIMUM_LIMIT
   end
 
   def valid_transaction_amount?(number)
     valid_number?(number) && number.positive? && number != 0
+  end
+
+  def calculate_new_balance
+    @balance + @amount
   end
 
 end
