@@ -33,7 +33,6 @@ describe BankAccount do
     before do
       @fake_withdrawal = double(:withdrawal)
       allow(account).to receive(:create_withdrawal).and_return @fake_withdrawal
-
       allow(@fake_withdrawal).to receive(:successful?).and_return true
       allow(@fake_withdrawal).to receive(:new_balance).and_return 100
     end

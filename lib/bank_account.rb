@@ -38,16 +38,6 @@ class BankAccount
     Withdrawal.new(amount, @balance)
   end
 
-  def valid_number?(number)
-    true if Float(number)
-    rescue StandardError
-    false
-  end
-
-  def valid_transaction_amount?(amount)
-    valid_number?(amount) && amount.positive? && amount != 0
-  end
-
   def transactions_to_strings
     transaction_strings = [STATEMENT_HEADER]
     @transactions.reverse.each do |transaction|
