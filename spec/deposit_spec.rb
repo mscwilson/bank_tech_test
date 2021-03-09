@@ -1,8 +1,6 @@
 require "deposit"
 
 describe Deposit do
-
-
   it "returns a warning if a negative amount was given" do
     deposit = Deposit.new(-100)
     expect(deposit.error).to eq "Please enter a positive number."
@@ -26,11 +24,11 @@ describe Deposit do
     end
 
     it "returns true for '12.4'" do
-      expect(deposit.valid_number?('12.4')).to be true
+      expect(deposit.valid_number?("12.4")).to be true
     end
 
     it "returns false for 'hello'" do
-      expect(deposit.valid_number?('hello')).to be false
+      expect(deposit.valid_number?("hello")).to be false
     end
 
     it "returns false for bool" do
@@ -56,8 +54,5 @@ describe Deposit do
     it "returns false for -100" do
       expect(deposit.valid_transaction_amount?(-100)).to be false
     end
-
-
   end
-
 end

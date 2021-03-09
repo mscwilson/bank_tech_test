@@ -9,8 +9,6 @@ describe BankAccount do
       expect { account.deposit(100) }.to change { account.balance }.by 100
     end
 
-
-
     it "allows amounts to be given as a string" do
       expect { account.deposit("100") }.to change { account.balance }.by 100
     end
