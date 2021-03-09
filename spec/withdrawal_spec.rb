@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "withdrawal"
 
 describe Withdrawal do
@@ -11,7 +13,7 @@ describe Withdrawal do
 
   describe "#calculate_new_balance" do
     it "adds current balance and withdrawal amount" do
-      expect(withdrawal.calculate_new_balance).to eq -100
+      expect(withdrawal.calculate_new_balance).to eq(-100)
     end
   end
 
@@ -52,5 +54,4 @@ describe Withdrawal do
       expect(withdrawal.within_max_limit?(3000)).to be false
     end
   end
-
 end

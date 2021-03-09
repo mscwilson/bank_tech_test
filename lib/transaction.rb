@@ -1,11 +1,12 @@
-class Transaction
+# frozen_string_literal: true
 
+class Transaction
   attr_reader :amount, :date, :error, :new_balance
 
   MAXIMUM_LIMIT = 10_000
 
   def initialize(amount, balance = 0)
-    @amount = (amount.is_a?(String) && valid_number?(amount)) ? convert_to_number(amount) : amount
+    @amount = amount.is_a?(String) && valid_number?(amount) ? convert_to_number(amount) : amount
     @date = Time.now
     @balance = balance
     @new_balance = successful? ? calculate_new_balance : @balance
@@ -15,6 +16,7 @@ class Transaction
   def error_message
     return "Please enter a positive number." unless valid_transaction_amount?(@amount)
     return "Unable to process large deposit. Please speak to your bank manager." unless within_max_limit?(@amount)
+
     "N/A"
   end
 
@@ -43,5 +45,4 @@ class Transaction
   def calculate_new_balance
     @balance + @amount
   end
-
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "deposit"
 require_relative "withdrawal"
 
@@ -25,6 +27,7 @@ class BankAccount
 
   def print_statement
     return puts "No transactions to show." if @transactions.length == 0
+
     puts transactions_to_strings.join("\n")
   end
 

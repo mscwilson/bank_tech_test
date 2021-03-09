@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require_relative "transaction"
 
 class Withdrawal < Transaction
-
   MAXIMUM_LIMIT = 2500
 
   def amount_more_than_balance?
@@ -12,6 +13,7 @@ class Withdrawal < Transaction
     return "Please enter a positive number." unless valid_transaction_amount?(@amount)
     return "Insufficient funds." if amount_more_than_balance?
     return "Unable to process large deposit. Please speak to your bank manager." unless within_max_limit?(@amount)
+
     "N/A"
   end
 
@@ -26,5 +28,4 @@ class Withdrawal < Transaction
   def within_max_limit?(number)
     number < MAXIMUM_LIMIT
   end
-
 end

@@ -1,60 +1,67 @@
+# frozen_string_literal: true
+
 require "statement"
 
 describe Statement do
-
-  let(:statement) { Statement.new([]) }
+  let(:statement) { Statement.new([1, 2, 3]) }
 
   describe "#render_single_transaction" do
+    before do
+      @fake_transaction = double(:deposit)
+      allow(@fake_transaction).to receive(:date).and_return Time.now
+      allow(@fake_transaction).to receive(:amount).and_return 100
+      allow(@fake_transaction).to receive(:new_balance).and_return 100
+    end
 
     it "returns the correct string for a deposit" do
-      @fake_deposit = double(:deposit)
-      allow(@fake_deposit).to receive(:date).and_return Time.now
-      allow(@fake_deposit).to receive(:amount).and_return 100
-      allow(@fake_deposit).to receive(:new_balance).and_return 100
+      allow(@fake_transaction).to receive(:instance_of?).and_return true
       expected = "#{Time.now.strftime('%d/%m/%Y')} || 100.00 || || 100.00"
-      expect(statement.render_single_transaction(@fake_deposit)).to eq expected
+      expect(statement.render_single_transaction(@fake_transaction)).to eq expected
+    end
+
+    it "returns the correct string for a withdrawal" do
+      allow(@fake_transaction).to receive(:instance_of?).and_return false
+      expected = "#{Time.now.strftime('%d/%m/%Y')} || || 100.00 || 100.00"
+      expect(statement.render_single_transaction(@fake_transaction)).to eq expected
     end
   end
 
+  describe "#transactions_to_strings" do
+    it "renders all the transactions into strings in reverse order" do
+      allow(statement).to receive(:render_single_transaction).and_return("hello", "world", "!")
+      expect(statement.transactions_to_strings).to eq [Statement::HEADER, "hello", "world", "!"]
+    end
+  end
 
+  describe "#transactions?" do
+    it "is true if given a list with things in" do
+      expect(statement.transactions?).to be true
+    end
 
+    it "is false if given an empty list" do
+      statement = Statement.new([])
+      expect(statement.transactions?).to be false
+    end
+  end
 
-    #   it "prints details of a deposit" do
-    #   account.deposit(100)
-    #   transaction = "#{Time.now.strftime('%d/%m/%Y')} || 100.00 || || 100.00"
-    #   expect { account.print_statement }.to output(statement_header + transaction + "\n").to_stdout
-    # end
+  describe "#final_output" do
+    it "returns an error message if there weren't any transactions" do
+      allow(statement).to receive(:transactions?).and_return false
+      expect(statement.final_output).to eq "No transactions to show."
+    end
 
-    # it "shows the balance at the time of transaction on statement" do
-    #   account.deposit(100)
-    #   account.deposit(100)
+    it "has header and appropriate transaction info" do
+      expected_info = "#{Time.now.strftime('%d/%m/%Y')} || 100.00 || || 100.00"
+      final_string = "#{Statement::HEADER}\n#{expected_info}"
+      allow(statement).to receive(:transactions?).and_return true
+      allow(statement).to receive(:transactions_to_strings).and_return [Statement::HEADER, expected_info]
+      expect(statement.final_output).to eq final_string
+    end
+  end
 
-    #   transaction_str1 = "#{Time.now.strftime('%d/%m/%Y')} || 100.00 || || 200.00\n"
-    #   transaction_str2 = "#{Time.now.strftime('%d/%m/%Y')} || 100.00 || || 100.00"
-    #   full_statement = statement_header + transaction_str1 + transaction_str2 + "\n"
-
-    #   expect { account.print_statement }.to output(full_statement).to_stdout
-    # end
-
-    # xit "prints details of a withdrawal" do
-    #   account.deposit(1000)
-    #   account.withdraw(500)
-
-    #   transaction_str1 = "#{Time.now.strftime('%d/%m/%Y')} || || 500.00 || 500.00\n"
-    #   transaction_str2 = "#{Time.now.strftime('%d/%m/%Y')} || 1000.00 || || 1000.00"
-    #   full_statement = statement_header + transaction_str1 + transaction_str2 + "\n"
-
-    #   expect { account.print_statement }.to output(full_statement).to_stdout
-    # end
-
-    # it "says 'No transactions' if appropriate" do
-    #   expect { account.print_statement }.to output("No transactions to show.\n").to_stdout
-    # end
-
-    # it "prints two decimal places" do
-    #   account.deposit(100.34922)
-    #   full_statement = statement_header + "#{Time.now.strftime('%d/%m/%Y')} || 100.35 || || 100.35"
-    #   expect { account.print_statement }.to output(full_statement + "\n").to_stdout
-    # end
-
+  # it "prints two decimal places" do
+  #   account.deposit(100.34922)
+  #   full_statement = statement_header + "#{Time.now.strftime('%d/%m/%Y')} || 100.35 || || 100.35"
+  #   expect { account.print_statement }.to output(full_statement + "\n").to_stdout
+  # end
 end

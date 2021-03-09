@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "transaction"
 
 describe Transaction do
@@ -26,7 +28,6 @@ describe Transaction do
       transaction = Transaction.new(100)
       expect(transaction.new_balance).to eq 100
     end
-
   end
 
   describe "#successful?" do
@@ -71,7 +72,6 @@ describe Transaction do
       expect(transaction.error_message).to eq "N/A"
     end
   end
-
 
   describe "#valid_number?" do
     it "returns true for 12.4" do
