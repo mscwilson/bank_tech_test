@@ -6,7 +6,7 @@
           1,
           null,
           1,
-          19,
+          18,
           5,
           null,
           1,
@@ -14,8 +14,6 @@
           4,
           null,
           null,
-          1,
-          2,
           null,
           null,
           1,
@@ -31,7 +29,8 @@
           null,
           null,
           1,
-          2,
+          1,
+          1,
           null,
           null,
           null,
@@ -66,7 +65,9 @@
           null,
           1,
           1,
-          2,
+          1,
+          1,
+          null,
           null,
           null,
           null,
@@ -120,13 +121,13 @@
           1,
           null,
           1,
-          18,
-          18,
+          17,
+          17,
           null,
           null,
           1,
-          15,
-          15,
+          14,
+          14,
           12,
           null,
           11,
@@ -151,13 +152,13 @@
           1,
           null,
           1,
-          24,
+          23,
           null,
           2,
           null,
           null,
           1,
-          23,
+          22,
           null,
           null,
           1,
@@ -181,8 +182,61 @@
           null,
           null
         ]
+      },
+      "/Users/mirandawilson/Makers/week10/bank_tech_test/spec/deposit_spec.rb": {
+        "lines": [
+          1,
+          null,
+          1,
+          null,
+          1,
+          1,
+          1,
+          null,
+          null,
+          1,
+          1,
+          1,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "/Users/mirandawilson/Makers/week10/bank_tech_test/lib/deposit.rb": {
+        "lines": [
+          1,
+          null,
+          1,
+          2,
+          null,
+          null,
+          1,
+          2,
+          null,
+          null,
+          null
+        ]
+      },
+      "/Users/mirandawilson/Makers/week10/bank_tech_test/spec/transaction_spec.rb": {
+        "lines": [
+          1,
+          null,
+          1,
+          null,
+          null,
+          null
+        ]
+      },
+      "/Users/mirandawilson/Makers/week10/bank_tech_test/lib/transaction.rb": {
+        "lines": [
+          1,
+          null,
+          null,
+          null
+        ]
       }
     },
-    "timestamp": 1615286659
+    "timestamp": 1615288986
   }
 }

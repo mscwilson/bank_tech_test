@@ -27,15 +27,31 @@ date || credit || debit || balance
   
 ### Planning
 
-Bank account class?
-
+Classes:
+BankAccount:
 current_balance
 transactions_list
+--
+withdraw()
+deposit()
+create_transaction()
+print_statement()
 
-deposit() - amount, date, balance_immediately_afterwards - hash?
-withdraw() - amount, date, balance_immediately_afterwards
+Transaction: - needs to know BankAccount.current_balance
+type (deposit/withdrawal) - actually these could be subclasses of Transaction? 
+date
+amount
+balance immediately post transation
+--
+amount_validation()
 
-print_statement() - reverse order of transactions
+
+Statement: - needs to know BankAccount.transactions_list
+--
+transactions_to_strings()
+render_single_transaction()
+create_statement()
+
 
 
 Edge cases:
@@ -49,6 +65,4 @@ maybe allow string num amounts?
 very large amounts deposited £10 000 withdraw £2500
 
 float input - actually store as pence? what to do if given more than 2dp?
-dates - in future/wrong format - allow strings to be given
-
 NB magic numbers

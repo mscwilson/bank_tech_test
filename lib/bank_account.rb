@@ -1,7 +1,7 @@
 class BankAccount
   attr_reader :balance
 
-  STATEMENT_HEADER = 'date || credit || debit || balance'
+  STATEMENT_HEADER = "date || credit || debit || balance"
 
   def initialize
     @balance = 0
@@ -10,7 +10,7 @@ class BankAccount
 
   def deposit(amount)
     amount = Float(amount) if amount.is_a?(String) && valid_number?(amount)
-    return puts 'Please enter a positive number.' unless valid_amount?(amount)
+    return puts "Please enter a positive number." unless valid_amount?(amount)
     return puts "Unable to process large deposit. Please speak to your bank manager." if amount >= 10000
 
     @balance += amount
@@ -18,16 +18,16 @@ class BankAccount
   end
 
   def withdraw(amount)
-    return puts 'Please enter a positive number.' unless valid_amount?(amount)
-    return puts 'Insufficient funds.' if amount > @balance
-    return puts 'Amount exceeds daily limit. Please speak to your bank manager to withdraw large sums.' if amount > 2500
+    return puts "Please enter a positive number." unless valid_amount?(amount)
+    return puts "Insufficient funds." if amount > @balance
+    return puts "Amount exceeds daily limit. Please speak to your bank manager to withdraw large sums." if amount > 2500
 
     @balance -= amount
     @transactions << { amount: -amount, date: Time.now, then_balance: @balance }
   end
 
   def print_statement
-    return puts 'No transactions to show.' if @transactions.length == 0
+    return puts "No transactions to show." if @transactions.length == 0
 
     puts transactions_to_strings.join("\n")
   end
@@ -36,7 +36,7 @@ class BankAccount
 
   def valid_number?(number)
     true if Float(number)
-    rescue StandardError
+  rescue StandardError
     false
   end
 
@@ -53,7 +53,7 @@ class BankAccount
   end
 
   def render_single_transaction(transaction)
-    date = transaction[:date].strftime('%d/%m/%Y')
+    date = transaction[:date].strftime("%d/%m/%Y")
     amount = transaction[:amount]
     then_balance = transaction[:then_balance]
 
