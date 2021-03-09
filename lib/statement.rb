@@ -10,15 +10,12 @@ class Statement
     @transactions = array
   end
 
-  def render_single_transaction(transaction)
-    date = transaction.date.strftime("%d/%m/%Y")
-    amount = format("%.2f", transaction.amount)
-    new_balance = format("%.2f", transaction.new_balance)
+  def final_output
+    transactions? ? transactions_to_strings.join("\n") : "No transactions to show."
+  end
 
-    deposit_str = "#{date} || #{amount} || || #{new_balance}"
-    withdrawal_str = "#{date} || || #{amount} || #{new_balance}"
-
-    transaction.instance_of?(Deposit) ? deposit_str : withdrawal_str
+  def transactions?
+    !@transactions.empty?
   end
 
   def transactions_to_strings
@@ -30,15 +27,19 @@ class Statement
     transaction_strings
   end
 
-  def transactions?
-    !@transactions.empty?
-  end
+  def render_single_transaction(transaction)
+    date = transaction.date.strftime("%d/%m/%Y")
+    amount = format("%.2f", transaction.amount)
+    new_balance = format("%.2f", transaction.new_balance)
 
-  def final_output
-    transactions? ? transactions_to_strings.join("\n") : "No transactions to show."
+    deposit_str = "#{date} || #{amount} || || #{new_balance}"
+    withdrawal_str = "#{date} || || #{amount} || #{new_balance}"
+
+    transaction.instance_of?(Deposit) ? deposit_str : withdrawal_str
   end
 
   private #--------------------------------------
 
   attr_reader :transactions
+
 end

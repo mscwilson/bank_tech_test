@@ -14,6 +14,32 @@ class Transaction
     @error = error_message
   end
 
+  def valid_number?(number)
+    true if Float(number)
+  rescue StandardError
+    false
+  end
+
+  def convert_to_number(number)
+    Float(number)
+  end
+
+  def successful?
+    valid_transaction_amount?(@amount) && within_max_limit?(@amount)
+  end
+
+  def valid_transaction_amount?(number)
+    valid_number?(number) && number.positive? && number != 0
+  end
+
+  def within_max_limit?(number)
+    number < MAXIMUM_LIMIT
+  end
+
+  def calculate_new_balance
+    @balance + @amount
+  end
+
   def error_message
     return "Please enter a positive number." unless valid_transaction_amount?(@amount)
     return "Unable to process large deposit. Please speak to your bank manager." unless within_max_limit?(@amount)
@@ -21,29 +47,4 @@ class Transaction
     "N/A"
   end
 
-  def successful?
-    valid_transaction_amount?(@amount) && within_max_limit?(@amount)
-  end
-
-  def convert_to_number(number)
-    Float(number)
-  end
-
-  def valid_number?(number)
-    true if Float(number)
-  rescue StandardError
-    false
-  end
-
-  def within_max_limit?(number)
-    number < MAXIMUM_LIMIT
-  end
-
-  def valid_transaction_amount?(number)
-    valid_number?(number) && number.positive? && number != 0
-  end
-
-  def calculate_new_balance
-    @balance + @amount
-  end
 end

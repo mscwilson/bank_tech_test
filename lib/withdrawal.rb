@@ -6,8 +6,20 @@ require_relative "transaction"
 class Withdrawal < Transaction
   MAXIMUM_LIMIT = 2500
 
+  def successful?
+    valid_transaction_amount?(@amount) && within_max_limit?(@amount) && !amount_more_than_balance?
+  end
+
+  def within_max_limit?(number)
+    number < MAXIMUM_LIMIT
+  end
+
   def amount_more_than_balance?
     @amount > @balance
+  end
+
+  def calculate_new_balance
+    @balance - @amount
   end
 
   def error_message
@@ -18,15 +30,4 @@ class Withdrawal < Transaction
     "N/A"
   end
 
-  def successful?
-    valid_transaction_amount?(@amount) && within_max_limit?(@amount) && !amount_more_than_balance?
-  end
-
-  def calculate_new_balance
-    @balance - @amount
-  end
-
-  def within_max_limit?(number)
-    number < MAXIMUM_LIMIT
-  end
 end
