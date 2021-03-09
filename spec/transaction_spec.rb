@@ -8,6 +8,12 @@ describe Transaction do
       expect(transaction.amount).to eq 100
     end
 
+    it "allows use of string number inputs" do
+      allow_any_instance_of(Transaction).to receive(:convert_to_number).and_return 100
+      transaction = Transaction.new("100")
+      expect(transaction.amount).to eq 100
+    end
+
     it "stores the date" do
       allow(Time).to receive(:now).and_return("14/01/2012")
       transaction = Transaction.new(100)
@@ -34,20 +40,26 @@ describe Transaction do
     end
   end
 
-  # it "returns a warning if a negative amount was given" do
-  #   transaction = Transaction.new(-100)
-  #   expect(transaction.error).to eq "Please enter a positive number."
-  # end
+  describe "#error_message" do
+    it "'unable to process large amount' if within_max_limit? false" do
+      allow_any_instance_of(Transaction).to receive(:within_max_limit?).and_return false
+      transaction = Transaction.new(100)
+      expect(transaction.error_message).to eq "Unable to process large deposit. Please speak to your bank manager."
+    end
 
-  # it "prints a warning if amount 0 was given" do
-  #   transaction = Transaction.new(0)
-  #   expect(transaction.error).to eq "Please enter a positive number."
-  # end
+    it "'enter a positive number' if valid_transaction_amount? false" do
+      allow_any_instance_of(Transaction).to receive(:valid_transaction_amount?).and_return false
+      transaction = Transaction.new(100)
+      expect(transaction.error_message).to eq "Please enter a positive number."
+    end
 
-  # it "checks if the amount is a number" do
-  #   transaction = Transaction.new(false)
-  #   expect(transaction.error).to eq "Please enter a positive number."
-  # end
+    it "'N/A' if transaction successful?" do
+      allow_any_instance_of(Transaction).to receive(:successful?).and_return true
+      transaction = Transaction.new(100)
+      expect(transaction.error_message).to eq "N/A"
+    end
+  end
+
 
   describe "#valid_number?" do
     it "returns true for 12.4" do
@@ -95,6 +107,12 @@ describe Transaction do
 
     it "returns true for 100" do
       expect(transaction.within_max_limit?(100)).to be true
+    end
+  end
+
+  describe "#convert_to_number" do
+    it "converts a string number to a number" do
+      expect(transaction.convert_to_number("100")).to eq 100
     end
   end
 end

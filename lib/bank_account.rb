@@ -11,7 +11,7 @@ class BankAccount
   def deposit(amount)
     amount = Float(amount) if amount.is_a?(String) && valid_number?(amount)
     return puts "Please enter a positive number." unless valid_transaction_amount?(amount)
-    return puts "Unable to process large deposit. Please speak to your bank manager." if amount >= 10_000
+    return puts "Unable to process large deposit. Please speak to your bank manager." if amount >= 10000
 
     @balance += amount
     @transactions << { amount: amount, date: Time.now, then_balance: @balance }
@@ -36,7 +36,7 @@ class BankAccount
 
   def valid_number?(number)
     true if Float(number)
-  rescue StandardError
+    rescue StandardError
     false
   end
 

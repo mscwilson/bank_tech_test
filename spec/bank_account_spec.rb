@@ -9,15 +9,6 @@ describe BankAccount do
       expect { account.deposit(100) }.to change { account.balance }.by 100
     end
 
-    it "allows amounts to be given as a string" do
-      expect { account.deposit("100") }.to change { account.balance }.by 100
-    end
-
-    it "prevents very large deposits" do
-      expect do
-        account.deposit(100_000)
-      end.to output("Unable to process large deposit. Please speak to your bank manager.\n").to_stdout
-    end
   end
 
   describe "#withdraw" do
