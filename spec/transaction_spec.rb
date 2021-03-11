@@ -32,32 +32,49 @@ describe Transaction do
     before do
       allow(transaction).to receive(:valid_transaction_amount?).and_return true
       allow(transaction).to receive(:within_max_limit?).and_return true
+      allow(transaction).to receive(:withdrawal?).and_return false
     end
 
-    it "true if valid_transaction_amount? is true" do
-      expect(transaction.successful?).to be true
+    describe "deposits" do
+      it "true if valid_transaction_amount? is true" do
+        expect(transaction.successful?).to be true
+      end
+
+      it "false if within_max_limit? is false" do
+        allow(transaction).to receive(:within_max_limit?).and_return false
+        expect(transaction.successful?).to be false
+      end
+
+      it "false if valid_transaction_amount? is false" do
+        allow(transaction).to receive(:valid_transaction_amount?).and_return false
+        expect(transaction.successful?).to be false
+      end
     end
 
-    it "false if within_max_limit? is false" do
-      allow(transaction).to receive(:within_max_limit?).and_return false
-      expect(transaction.successful?).to be false
-    end
-
-    it "false if valid_transaction_amount? is false" do
-      allow(transaction).to receive(:valid_transaction_amount?).and_return false
-      expect(transaction.successful?).to be false
+    describe "withdrawals also" do
+      it "false if amount_more_than_balance?" do
+        allow(transaction).to receive(:withdrawal?).and_return true
+        allow(transaction).to receive(:amount_more_than_balance?).and_return true
+        expect(transaction.successful?).to be false
+      end
     end
   end
 
   describe "#error_message" do
     it "'unable to process large amount' if within_max_limit? false" do
       allow(transaction).to receive(:within_max_limit?).and_return false
-      expect(transaction.error_message).to eq "Unable to process large deposit. Please speak to your bank manager."
+      expect(transaction.error_message).to eq "Unable to process large request. Please speak to your bank manager."
     end
 
     it "'enter a positive number' if valid_transaction_amount? false" do
       allow(transaction).to receive(:valid_transaction_amount?).and_return false
       expect(transaction.error_message).to eq "Please enter a positive number."
+    end
+
+    it "'Insufficient funds' if amount_more_than_balance?" do
+      allow(transaction).to receive(:withdrawal?).and_return true
+      allow(transaction).to receive(:amount_more_than_balance?).and_return true
+      expect(transaction.error_message).to eq "Insufficient funds."
     end
 
     it "'N/A' if transaction successful?" do
@@ -130,14 +147,14 @@ describe Transaction do
     end
   end
 
-  describe "#withdrawal?" do
-    it "is negative if the input amount is positive" do
-      expect(transaction).not_to be_a_withdrawal
-    end
+  # describe "#withdrawal?" do
+  #   it "is negative if the input amount is positive" do
+  #     expect(transaction).not_to be_a_withdrawal
+  #   end
 
-    it "is true if the input amount is negative" do
-      transaction = Transaction.new(-DEFAULT_TRANSACTION_AMOUNT)
-      expect(transaction).to be_a_withdrawal
-    end
-  end
+  #   it "is true if the input amount is negative" do
+  #     transaction = Transaction.new(-DEFAULT_TRANSACTION_AMOUNT)
+  #     expect(transaction).to be_a_withdrawal
+  #   end
+  # end
 end

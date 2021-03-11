@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "deposit"
+require_relative "transaction"
 
 # Converts a list of Transaction objects into a statement to print out
 class Statement
@@ -36,7 +36,7 @@ class Statement
     deposit_str = "#{date} || #{amount} || || #{new_balance}"
     withdrawal_str = "#{date} || || #{amount} || #{new_balance}"
 
-    transaction.instance_of?(Deposit) ? deposit_str : withdrawal_str
+    transaction.instance_of?(Transaction) ? deposit_str : withdrawal_str
   end
 
   private #--------------------------------------

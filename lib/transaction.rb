@@ -15,10 +15,6 @@ class Transaction
     @error = error_message
   end
 
-  def withdrawal?
-    @amount.negative?
-  end
-
   def valid_number?(number)
     true if Float(number)
   rescue StandardError
@@ -30,7 +26,11 @@ class Transaction
   end
 
   def successful?
-    valid_transaction_amount?(@amount) && within_max_limit?(@amount)
+    if withdrawal?
+      valid_transaction_amount?(@amount) && within_max_limit?(@amount) && !amount_more_than_balance?
+    else
+      valid_transaction_amount?(@amount) && within_max_limit?(@amount)
+    end
   end
 
   def valid_transaction_amount?(number)
@@ -47,12 +47,16 @@ class Transaction
 
   def error_message
     return "Please enter a positive number." unless valid_transaction_amount?(@amount)
-    return "Unable to process large deposit. Please speak to your bank manager." unless within_max_limit?(@amount)
-
+    return "Unable to process large request. Please speak to your bank manager." unless within_max_limit?(@amount)
+    return "Insufficient funds." if amount_more_than_balance? && withdrawal?
     "N/A"
   end
 
   private #----------------------------------------
+
+  def withdrawal?
+    @amount.negative?
+  end
 
   def amount_more_than_balance?
     @amount > @balance

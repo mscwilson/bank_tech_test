@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "deposit"
-require_relative "withdrawal"
+require_relative "transaction"
 require_relative "statement"
 
 # BankAccount stores a balance and allows user to withdraw and deposit money
@@ -32,11 +31,11 @@ class BankAccount
   private #--------------------------------------------------
 
   def create_deposit(amount)
-    Deposit.new(amount, @balance)
+    Transaction.new(amount, @balance)
   end
 
   def create_withdrawal(amount)
-    Withdrawal.new(amount, @balance)
+    Transaction.new(-amount, @balance)
   end
 
   def create_statement
