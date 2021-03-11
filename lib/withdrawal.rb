@@ -29,5 +29,4 @@ class Withdrawal < Transaction
 
     "N/A"
   end
-
 end

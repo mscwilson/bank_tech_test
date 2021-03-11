@@ -11,7 +11,7 @@ describe Transaction do
     end
 
     it "allows use of string number inputs" do
-      allow_any_instance_of(Transaction).to receive(:convert_to_number).and_return DEFAULT_TRANSACTION_AMOUNT
+      allow(transaction).to receive(:convert_to_number).and_return DEFAULT_TRANSACTION_AMOUNT
       transaction = Transaction.new(DEFAULT_TRANSACTION_AMOUNT.to_s)
       expect(transaction.amount).to eq DEFAULT_TRANSACTION_AMOUNT
     end
@@ -22,16 +22,16 @@ describe Transaction do
     end
 
     it "shows the new balance post transaction" do
-      allow_any_instance_of(Transaction).to receive(:successful?).and_return true
-      allow_any_instance_of(Transaction).to receive(:calculate_new_balance).and_return DEFAULT_TRANSACTION_AMOUNT
+      allow(transaction).to receive(:successful?).and_return true
+      allow(transaction).to receive(:calculate_new_balance).and_return DEFAULT_TRANSACTION_AMOUNT
       expect(transaction.new_balance).to eq DEFAULT_TRANSACTION_AMOUNT
     end
   end
 
   describe "#successful?" do
     before do
-      allow_any_instance_of(Transaction).to receive(:valid_transaction_amount?).and_return true
-      allow_any_instance_of(Transaction).to receive(:within_max_limit?).and_return true
+      allow(transaction).to receive(:valid_transaction_amount?).and_return true
+      allow(transaction).to receive(:within_max_limit?).and_return true
     end
 
     it "true if valid_transaction_amount? is true" do
@@ -39,29 +39,29 @@ describe Transaction do
     end
 
     it "false if within_max_limit? is false" do
-      allow_any_instance_of(Transaction).to receive(:within_max_limit?).and_return false
+      allow(transaction).to receive(:within_max_limit?).and_return false
       expect(transaction.successful?).to be false
     end
 
     it "false if valid_transaction_amount? is false" do
-      allow_any_instance_of(Transaction).to receive(:valid_transaction_amount?).and_return false
+      allow(transaction).to receive(:valid_transaction_amount?).and_return false
       expect(transaction.successful?).to be false
     end
   end
 
   describe "#error_message" do
     it "'unable to process large amount' if within_max_limit? false" do
-      allow_any_instance_of(Transaction).to receive(:within_max_limit?).and_return false
+      allow(transaction).to receive(:within_max_limit?).and_return false
       expect(transaction.error_message).to eq "Unable to process large deposit. Please speak to your bank manager."
     end
 
     it "'enter a positive number' if valid_transaction_amount? false" do
-      allow_any_instance_of(Transaction).to receive(:valid_transaction_amount?).and_return false
+      allow(transaction).to receive(:valid_transaction_amount?).and_return false
       expect(transaction.error_message).to eq "Please enter a positive number."
     end
 
     it "'N/A' if transaction successful?" do
-      allow_any_instance_of(Transaction).to receive(:successful?).and_return true
+      allow(transaction).to receive(:successful?).and_return true
       expect(transaction.error_message).to eq "N/A"
     end
   end
@@ -104,12 +104,17 @@ describe Transaction do
   end
 
   describe "#within_max_limit?" do
-    it "returns false for 10 000" do
-      expect(transaction.within_max_limit?(Transaction::MAXIMUM_LIMIT)).to be false
-    end
-
     it "returns true for 100" do
       expect(transaction.within_max_limit?(DEFAULT_TRANSACTION_AMOUNT)).to be true
+    end
+
+    it "returns false for 10 000 if deposit" do
+      expect(transaction.within_max_limit?(Transaction::MAXIMUM_DEPOSIT_LIMIT)).to be false
+    end
+
+    it "returns false for 10 000 if withdrawal" do
+      transaction = Transaction.new(-DEFAULT_TRANSACTION_AMOUNT)
+      expect(transaction.within_max_limit?(Transaction::MAXIMUM_WITHDRAWAL_LIMIT)).to be false
     end
   end
 
@@ -122,6 +127,17 @@ describe Transaction do
   describe "#calculate_new_balance" do
     it "adds current balance and transaction amount" do
       expect(transaction.calculate_new_balance).to eq DEFAULT_TRANSACTION_AMOUNT
+    end
+  end
+
+  describe "#withdrawal?" do
+    it "is negative if the input amount is positive" do
+      expect(transaction).not_to be_a_withdrawal
+    end
+
+    it "is true if the input amount is negative" do
+      transaction = Transaction.new(-DEFAULT_TRANSACTION_AMOUNT)
+      expect(transaction).to be_a_withdrawal
     end
   end
 end

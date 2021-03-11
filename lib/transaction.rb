@@ -4,7 +4,8 @@
 class Transaction
   attr_reader :amount, :date, :error, :new_balance
 
-  MAXIMUM_LIMIT = 10_000
+  MAXIMUM_DEPOSIT_LIMIT = 10_000
+  MAXIMUM_WITHDRAWAL_LIMIT = 2500
 
   def initialize(amount, balance = 0)
     @amount = amount.is_a?(String) && valid_number?(amount) ? convert_to_number(amount) : amount
@@ -12,6 +13,10 @@ class Transaction
     @balance = balance
     @new_balance = successful? ? calculate_new_balance : @balance
     @error = error_message
+  end
+
+  def withdrawal?
+    @amount.negative?
   end
 
   def valid_number?(number)
@@ -33,7 +38,7 @@ class Transaction
   end
 
   def within_max_limit?(number)
-    number < MAXIMUM_LIMIT
+    number < (withdrawal? ? MAXIMUM_WITHDRAWAL_LIMIT : MAXIMUM_DEPOSIT_LIMIT)
   end
 
   def calculate_new_balance
@@ -47,4 +52,20 @@ class Transaction
     "N/A"
   end
 
+  private #----------------------------------------
+
+  def amount_more_than_balance?
+    @amount > @balance
+  end
+
 end
+
+
+
+  # def error_message
+  #   return "Please enter a positive number." unless valid_transaction_amount?(@amount)
+  #   return "Insufficient funds." if amount_more_than_balance?
+  #   return "Unable to process large deposit. Please speak to your bank manager." unless within_max_limit?(@amount)
+
+  #   "N/A"
+  # end

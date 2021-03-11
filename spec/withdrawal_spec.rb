@@ -19,32 +19,29 @@ describe Withdrawal do
 
   describe "#error_message" do
     it "'Insufficient funds' if amount_more_than_balance?" do
-      allow_any_instance_of(Withdrawal).to receive(:amount_more_than_balance?).and_return true
+      allow(withdrawal).to receive(:amount_more_than_balance?).and_return true
       expect(withdrawal.error_message).to eq "Insufficient funds."
     end
   end
 
   describe "#successful?" do
     before do
-      allow_any_instance_of(Withdrawal).to receive(:valid_transaction_amount?).and_return true
-      allow_any_instance_of(Withdrawal).to receive(:within_max_limit?).and_return false
+      allow(withdrawal).to receive(:valid_transaction_amount?).and_return true
+      allow(withdrawal).to receive(:within_max_limit?).and_return false
     end
 
     it "true if valid_withdrawal_amount? is true" do
-      allow_any_instance_of(Withdrawal).to receive(:within_max_limit?).and_return true
-      allow_any_instance_of(Withdrawal).to receive(:amount_more_than_balance?).and_return false
-      withdrawal = Withdrawal.new(DEFAULT_TRANSACTION_AMOUNT)
+      allow(withdrawal).to receive(:within_max_limit?).and_return true
+      allow(withdrawal).to receive(:amount_more_than_balance?).and_return false
       expect(withdrawal.successful?).to be true
     end
 
     it "false if within_max_limit? is false" do
-      withdrawal = Withdrawal.new(DEFAULT_TRANSACTION_AMOUNT)
       expect(withdrawal.successful?).to be false
     end
 
     it "false if amount_more_than_balance?" do
-      allow_any_instance_of(Withdrawal).to receive(:amount_more_than_balance?).and_return true
-      withdrawal = Withdrawal.new(DEFAULT_TRANSACTION_AMOUNT)
+      allow(withdrawal).to receive(:amount_more_than_balance?).and_return true
       expect(withdrawal.successful?).to be false
     end
   end

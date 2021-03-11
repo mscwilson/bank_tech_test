@@ -22,6 +22,7 @@ class Statement
     transaction_strings = [HEADER]
     transactions.reverse.each do |transaction|
       next unless transaction.successful?
+
       transaction_strings << render_single_transaction(transaction)
     end
     transaction_strings
@@ -41,5 +42,4 @@ class Statement
   private #--------------------------------------
 
   attr_reader :transactions
-
 end
