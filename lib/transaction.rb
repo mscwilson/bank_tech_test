@@ -2,7 +2,7 @@
 
 # Stores transaction info. Parent of Withdrawal and Deposit
 class Transaction
-  attr_reader :amount, :date, :error, :new_balance, :balance
+  attr_reader :amount, :date, :error, :new_balance
 
   MAXIMUM_DEPOSIT_LIMIT = 10_000
   MAXIMUM_WITHDRAWAL_LIMIT = 2500
@@ -15,15 +15,6 @@ class Transaction
     @error = error_message
   end
 
-  def valid_number?(number)
-    true if Float(number)
-  rescue StandardError
-    false
-  end
-
-  def convert_to_number(number)
-    Float(number)
-  end
 
   def successful?
     if withdrawal?
@@ -65,5 +56,15 @@ class Transaction
 
   def amount_more_than_balance?
     calculate_new_balance.negative?
+  end
+
+  def valid_number?(number)
+    true if Float(number)
+  rescue StandardError
+    false
+  end
+
+  def convert_to_number(number)
+    Float(number)
   end
 end

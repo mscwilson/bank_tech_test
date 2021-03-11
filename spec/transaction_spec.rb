@@ -89,24 +89,6 @@ describe Transaction do
     end
   end
 
-  describe "#valid_number?" do
-    it "returns true for 12.4" do
-      expect(transaction.valid_number?(12.4)).to be true
-    end
-
-    it "returns true for '12.4'" do
-      expect(transaction.valid_number?("12.4")).to be true
-    end
-
-    it "returns false for 'hello'" do
-      expect(transaction.valid_number?("hello")).to be false
-    end
-
-    it "returns false for bool" do
-      expect(transaction.valid_number?(true)).to be false
-    end
-  end
-
   describe "#valid_transaction_amount" do
     before do
       allow(transaction).to receive(:valid_number?).and_return true
@@ -161,26 +143,9 @@ describe Transaction do
     end
   end
 
-  describe "#convert_to_number" do
-    it "converts a string number to a number" do
-      expect(transaction.convert_to_number(DEFAULT_TRANSACTION_AMOUNT.to_s)).to eq DEFAULT_TRANSACTION_AMOUNT
-    end
-  end
-
   describe "#calculate_new_balance" do
     it "adds current balance and transaction amount" do
       expect(transaction.calculate_new_balance).to eq DEFAULT_TRANSACTION_AMOUNT
     end
   end
-
-  # describe "#withdrawal?" do
-  #   it "is negative if the input amount is positive" do
-  #     expect(transaction).not_to be_a_withdrawal
-  #   end
-
-  #   it "is true if the input amount is negative" do
-  #     transaction = Transaction.new(-DEFAULT_TRANSACTION_AMOUNT)
-  #     expect(transaction).to be_a_withdrawal
-  #   end
-  # end
 end

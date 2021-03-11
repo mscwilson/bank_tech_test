@@ -13,12 +13,12 @@ class BankAccount
   end
 
   def deposit(amount)
-    deposit = create_transaction(amount)
+    deposit = create_transaction(sanitise_input(amount))
     process_transaction(deposit)
   end
 
   def withdraw(amount)
-    withdrawal = create_transaction(-amount)
+    withdrawal = create_transaction(-sanitise_input(amount))
     process_transaction(withdrawal)
   end
 
@@ -40,4 +40,20 @@ class BankAccount
     transaction.successful? ? (@balance = transaction.new_balance) : (puts transaction.error)
     @transactions << transaction
   end
+
+  def sanitise_input(input)
+    valid_number?(input) ? convert_to_number(input) : 0
+  end
+
+  def valid_number?(number)
+    true if Float(number)
+  rescue StandardError
+    false
+  end
+
+  def convert_to_number(number)
+    Float(number)
+  end
 end
+
+

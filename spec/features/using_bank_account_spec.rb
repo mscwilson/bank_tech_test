@@ -24,7 +24,11 @@ describe "using the bank account" do
     expect { account.print_statement }.to output("No transactions to show.\n").to_stdout
   end
 
-  it "trying to withdraw more money than in the account" do
+  it "withdrawing without depositing" do
+    expect { account.withdraw(100) }.to output("Insufficient funds.\n").to_stdout
+  end
+
+  it "depositing but then trying to withdraw more money than in the account" do
     account.deposit(1000)
     account.withdraw(100)
     account.withdraw(100)
