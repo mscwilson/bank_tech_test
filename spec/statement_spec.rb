@@ -14,13 +14,13 @@ describe Statement do
 
   describe "#render_single_transaction" do
     it "returns the correct string for a deposit" do
-      allow(@fake_transaction).to receive(:instance_of?).and_return true
       expected = "#{Time.now.strftime('%d/%m/%Y')} || 100.00 || || 100.00"
       expect(statement.render_single_transaction(@fake_transaction)).to eq expected
     end
 
     it "returns the correct string for a withdrawal" do
-      allow(@fake_transaction).to receive(:instance_of?).and_return false
+      allow(@fake_transaction).to receive(:amount).and_return -DEFAULT_TRANSACTION_AMOUNT
+      allow(@fake_transaction).to receive(:new_balance).and_return DEFAULT_TRANSACTION_AMOUNT
       expected = "#{Time.now.strftime('%d/%m/%Y')} || || 100.00 || 100.00"
       expect(statement.render_single_transaction(@fake_transaction)).to eq expected
     end
@@ -28,7 +28,7 @@ describe Statement do
     it "uses two decimal places" do
       allow(@fake_transaction).to receive(:amount).and_return 100.348123
       allow(@fake_transaction).to receive(:new_balance).and_return 100.348123
-      expected = "#{Time.now.strftime('%d/%m/%Y')} || || 100.35 || 100.35"
+      expected = "#{Time.now.strftime('%d/%m/%Y')} || 100.35 || || 100.35"
       expect(statement.render_single_transaction(@fake_transaction)).to eq expected
     end
   end

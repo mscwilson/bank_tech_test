@@ -13,15 +13,13 @@ class BankAccount
   end
 
   def deposit(amount)
-    deposit = create_deposit(amount)
-    deposit.successful? ? (@balance = deposit.new_balance) : (puts deposit.error)
-    @transactions << deposit
+    deposit = create_transaction(amount)
+    process_transaction(deposit)
   end
 
   def withdraw(amount)
-    withdrawal = create_withdrawal(amount)
-    withdrawal.successful? ? (@balance = withdrawal.new_balance) : (puts withdrawal.error)
-    @transactions << withdrawal
+    withdrawal = create_transaction(-amount)
+    process_transaction(withdrawal)
   end
 
   def print_statement
@@ -30,15 +28,16 @@ class BankAccount
 
   private #--------------------------------------------------
 
-  def create_deposit(amount)
+  def create_transaction(amount)
     Transaction.new(amount, @balance)
-  end
-
-  def create_withdrawal(amount)
-    Transaction.new(-amount, @balance)
   end
 
   def create_statement
     Statement.new(@transactions)
+  end
+
+  def process_transaction(transaction)
+    transaction.successful? ? (@balance = transaction.new_balance) : (puts transaction.error)
+    @transactions << transaction
   end
 end

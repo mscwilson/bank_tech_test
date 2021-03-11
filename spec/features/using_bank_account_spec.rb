@@ -26,7 +26,7 @@ describe "using the bank account" do
 
   it "trying to withdraw more money than in the account" do
     account.deposit(1000)
-    account.withdraw("100")
+    account.withdraw(100)
     account.withdraw(100)
     expect { account.withdraw(900) }.to output("Insufficient funds.\n").to_stdout
 

@@ -2,7 +2,7 @@
 
 # Stores transaction info. Parent of Withdrawal and Deposit
 class Transaction
-  attr_reader :amount, :date, :error, :new_balance
+  attr_reader :amount, :date, :error, :new_balance, :balance
 
   MAXIMUM_DEPOSIT_LIMIT = 10_000
   MAXIMUM_WITHDRAWAL_LIMIT = 2500
@@ -34,7 +34,11 @@ class Transaction
   end
 
   def valid_transaction_amount?(number)
-    valid_number?(number) && number.positive? && number != 0
+    if withdrawal?
+      valid_number?(number) && number.negative? && number != 0
+    else
+      valid_number?(number) && number.positive? && number != 0
+    end
   end
 
   def within_max_limit?(number)
@@ -49,6 +53,7 @@ class Transaction
     return "Please enter a positive number." unless valid_transaction_amount?(@amount)
     return "Unable to process large request. Please speak to your bank manager." unless within_max_limit?(@amount)
     return "Insufficient funds." if amount_more_than_balance? && withdrawal?
+
     "N/A"
   end
 
@@ -59,17 +64,6 @@ class Transaction
   end
 
   def amount_more_than_balance?
-    @amount > @balance
+    calculate_new_balance.negative?
   end
-
 end
-
-
-
-  # def error_message
-  #   return "Please enter a positive number." unless valid_transaction_amount?(@amount)
-  #   return "Insufficient funds." if amount_more_than_balance?
-  #   return "Unable to process large deposit. Please speak to your bank manager." unless within_max_limit?(@amount)
-
-  #   "N/A"
-  # end

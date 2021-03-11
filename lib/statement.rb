@@ -6,8 +6,8 @@ require_relative "transaction"
 class Statement
   HEADER = "date || credit || debit || balance"
 
-  def initialize(array)
-    @transactions = array
+  def initialize(transactions)
+    @transactions = transactions
   end
 
   def final_output
@@ -30,13 +30,14 @@ class Statement
 
   def render_single_transaction(transaction)
     date = transaction.date.strftime("%d/%m/%Y")
-    amount = format("%.2f", transaction.amount)
     new_balance = format("%.2f", transaction.new_balance)
-
-    deposit_str = "#{date} || #{amount} || || #{new_balance}"
-    withdrawal_str = "#{date} || || #{amount} || #{new_balance}"
-
-    transaction.instance_of?(Transaction) ? deposit_str : withdrawal_str
+    if transaction.amount.positive?
+      amount = format("%.2f", transaction.amount)
+      return "#{date} || #{amount} || || #{new_balance}"
+    else
+      amount = format("%.2f", -transaction.amount)
+      return "#{date} || || #{amount} || #{new_balance}"
+    end
   end
 
   private #--------------------------------------

@@ -11,7 +11,7 @@ describe BankAccount do
       allow(@fake_deposit).to receive(:successful?).and_return true
       allow(@fake_deposit).to receive(:new_balance).and_return DEFAULT_TRANSACTION_AMOUNT
       allow(@fake_deposit).to receive(:error).and_return "Please enter a positive number."
-      allow(account).to receive(:create_deposit).and_return @fake_deposit
+      allow(account).to receive(:create_transaction).and_return @fake_deposit
     end
 
     it "adds amount onto balance if transaction was successful" do
@@ -35,7 +35,7 @@ describe BankAccount do
       allow(@fake_withdrawal).to receive(:successful?).and_return true
       allow(@fake_withdrawal).to receive(:new_balance).and_return DEFAULT_TRANSACTION_AMOUNT
       allow(@fake_withdrawal).to receive(:error).and_return "Please enter a positive number."
-      allow(account).to receive(:create_withdrawal).and_return @fake_withdrawal
+      allow(account).to receive(:create_transaction).and_return @fake_withdrawal
     end
 
     it "subtracts amount from balance" do

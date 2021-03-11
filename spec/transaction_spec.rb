@@ -61,6 +61,12 @@ describe Transaction do
   end
 
   describe "#error_message" do
+    before do
+      allow(transaction).to receive(:withdrawal?).and_return false
+      allow(transaction).to receive(:valid_transaction_amount?).and_return true
+      allow(transaction).to receive(:within_max_limit?).and_return true
+    end
+
     it "'unable to process large amount' if within_max_limit? false" do
       allow(transaction).to receive(:within_max_limit?).and_return false
       expect(transaction.error_message).to eq "Unable to process large request. Please speak to your bank manager."
@@ -107,16 +113,36 @@ describe Transaction do
       allow(transaction).to receive(:within_max_limit?).and_return true
     end
 
-    it "returns true for 100" do
-      expect(transaction.valid_transaction_amount?(DEFAULT_TRANSACTION_AMOUNT)).to be true
-    end
-
     it "returns false for 0" do
       expect(transaction.valid_transaction_amount?(0)).to be false
     end
 
-    it "returns false for -100" do
-      expect(transaction.valid_transaction_amount?(-DEFAULT_TRANSACTION_AMOUNT)).to be false
+    describe "for deposits" do
+      before do
+        allow(transaction).to receive(:withdrawal?).and_return false
+      end
+
+      it "returns true for 100" do
+        expect(transaction.valid_transaction_amount?(DEFAULT_TRANSACTION_AMOUNT)).to be true
+      end
+
+      it "returns false for -100" do
+        expect(transaction.valid_transaction_amount?(-DEFAULT_TRANSACTION_AMOUNT)).to be false
+      end
+    end
+
+    describe "for withdrawals" do
+      before do
+        allow(transaction).to receive(:withdrawal?).and_return true
+      end
+
+      it "returns true for -100" do
+        expect(transaction.valid_transaction_amount?(-DEFAULT_TRANSACTION_AMOUNT)).to be true
+      end
+
+      it "returns false for 100" do
+        expect(transaction.valid_transaction_amount?(DEFAULT_TRANSACTION_AMOUNT)).to be false
+      end
     end
   end
 
