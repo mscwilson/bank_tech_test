@@ -8,31 +8,24 @@ class Transaction
   MAXIMUM_WITHDRAWAL_LIMIT = 2500
 
   def initialize(amount, balance = 0)
-    @amount = amount.is_a?(String) && valid_number?(amount) ? convert_to_number(amount) : amount
+    @amount = amount
     @date = Time.now
     @balance = balance
     @new_balance = successful? ? calculate_new_balance : @balance
     @error = error_message
   end
 
-
   def successful?
-    if withdrawal?
-      valid_transaction_amount?(@amount) && within_max_limit?(@amount) && !amount_more_than_balance?
-    else
-      valid_transaction_amount?(@amount) && within_max_limit?(@amount)
-    end
+    return false if withdrawal? && amount_more_than_balance?
+    valid_transaction_amount? && within_max_limit?
   end
 
-  def valid_transaction_amount?(number)
-    if withdrawal?
-      valid_number?(number) && number.negative? && number != 0
-    else
-      valid_number?(number) && number.positive? && number != 0
-    end
+  def valid_transaction_amount?(number = @amount)
+    return false if number == 0
+    withdrawal? ? number.negative? : number.positive?
   end
 
-  def within_max_limit?(number)
+  def within_max_limit?(number = @amount)
     number < (withdrawal? ? MAXIMUM_WITHDRAWAL_LIMIT : MAXIMUM_DEPOSIT_LIMIT)
   end
 
@@ -41,8 +34,8 @@ class Transaction
   end
 
   def error_message
-    return "Please enter a positive number." unless valid_transaction_amount?(@amount)
-    return "Unable to process large request. Please speak to your bank manager." unless within_max_limit?(@amount)
+    return "Please enter a positive number." unless valid_transaction_amount?
+    return "Unable to process large request. Please speak to your bank manager." unless within_max_limit?
     return "Insufficient funds." if amount_more_than_balance? && withdrawal?
 
     "N/A"
@@ -58,13 +51,4 @@ class Transaction
     calculate_new_balance.negative?
   end
 
-  def valid_number?(number)
-    true if Float(number)
-  rescue StandardError
-    false
-  end
-
-  def convert_to_number(number)
-    Float(number)
-  end
 end

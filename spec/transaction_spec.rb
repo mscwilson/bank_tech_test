@@ -10,12 +10,6 @@ describe Transaction do
       expect(transaction.amount).to eq DEFAULT_TRANSACTION_AMOUNT
     end
 
-    it "allows use of string number inputs" do
-      allow(transaction).to receive(:convert_to_number).and_return DEFAULT_TRANSACTION_AMOUNT
-      transaction = Transaction.new(DEFAULT_TRANSACTION_AMOUNT.to_s)
-      expect(transaction.amount).to eq DEFAULT_TRANSACTION_AMOUNT
-    end
-
     it "stores the date" do
       allow(Time).to receive(:now).and_return("14/01/2012")
       expect(transaction.date).to eq "14/01/2012"
@@ -91,7 +85,6 @@ describe Transaction do
 
   describe "#valid_transaction_amount" do
     before do
-      allow(transaction).to receive(:valid_number?).and_return true
       allow(transaction).to receive(:within_max_limit?).and_return true
     end
 
