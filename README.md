@@ -59,17 +59,19 @@ This project was written using Ruby v3.0.0.
 
 This project has 100% test coverage, according to the SimpleCov gem. Feature/integration and unit tests are included, written in Rspec.  
 
-* The main class is BankAccount, which maintains the current balance and a list of transactions.
-* Deposit and Withdrawal are subclasses of Transaction.
-* In fact Deposit is effectively Transaction with a more appropriate name. I could have gone straight for Deposit and have Withdrawal inherit from there, but that seemed weird. This way also keeps the door open for adding other types of transactions in the future, such as Transfer.
-* Transactions store the amount of money involved, the date, and the balance after the transaction occurs. They also contain information about whether the transaction is successful or if there was an error, eg an invalid input amount.
-* Withdrawal has additional methods to prevent going overdrawn, as well as making sure that the amount is subtracted rather than added to the balance.
-* To be more like a real bank, there's a limit on depositing or withdrawing too much in one go.
-* To improve user experience, it's possible to enter amounts as strings as well as numbers. Of course, decimal amounts are also fine, not just whole integer £s.
-* The bank statement and errors are printed directly out into the console for the user to see, not returned from methods.  
+* The main class is BankAccount, which stores the current balance and transaction history, and manages user activities.
+* Making deposits and withdrawals, and printing a statement, are done through BankAccount, providing a nice user experience.
+* The Transaction class handles deposits and withdrawals. Transactions store the amount of money involved, the date, and the balance after the transaction occurs. They also contain information about whether the transaction is successful or if there was an error, eg an invalid input amount.
+* Statements are also a separate class, which processes a transaction history into a formatted statement to print out.  
+* Although BankAccount is dependent on Transaction and Statement, I decided to keep them separate to optimise the Single Responsibility Principle, and keep class sizes within a reasonable number of lines.
 
+* The user input happens within BankAccount, therefore BankAccount also has the responsibility for sanitising the inputs (arguments) for the deposit and withdraw methods.
+* To improve user experience, it's possible to enter amounts as strings as well as numbers. Of course, decimal amounts are fine.
+* If the user enters an invalid amount for a transaction, they get an appropriate error message printed out. For example, "Insufficient funds." if they try to withdraw more money than is in the account.
+* To be more like a real bank, there's a limit on depositing or withdrawing too much in one go.
+* Unsuccessful transactions are still stored in the transaction history, but they don't show up on the printed statement.   
+  
 ### Known issues
-* Transactions are storing info about amount/date/etc, but also validating the input. It would be good to extract out a validation class/module for this.
 * I'm using Floats for the amounts. This isn't ideal for money because of how rounding works. A quick fix would be to store all the money as Integers in pence, ie x100. And also prevent users from entering more than 2 decimal places for transaction amount.
 * Not really an issue because it wasn't in the specification anyway, but actually in real banks the limit on depositing or withdrawing too much is capped daily, rather than per transaction. That's not a trivial feature to add as the Transactions don't currently know anything about transaction history.
 

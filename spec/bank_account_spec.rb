@@ -14,6 +14,11 @@ describe BankAccount do
       allow(account).to receive(:create_transaction).and_return @fake_deposit
     end
 
+    it "converts a bad input into 0 for creating transaction" do
+      expect(account).to receive(:create_transaction).with(0)
+      account.deposit("hello")
+    end
+
     it "adds amount onto balance if transaction was successful" do
       expect { account.deposit(DEFAULT_TRANSACTION_AMOUNT) }.to change { account.balance }.by DEFAULT_TRANSACTION_AMOUNT
     end

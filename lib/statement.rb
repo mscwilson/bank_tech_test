@@ -33,10 +33,10 @@ class Statement
     new_balance = format("%.2f", transaction.new_balance)
     if transaction.amount.positive?
       amount = format("%.2f", transaction.amount)
-      return "#{date} || #{amount} || || #{new_balance}"
+      "#{date} || #{amount} || || #{new_balance}"
     else
       amount = format("%.2f", -transaction.amount)
-      return "#{date} || || #{amount} || #{new_balance}"
+      "#{date} || || #{amount} || #{new_balance}"
     end
   end
 

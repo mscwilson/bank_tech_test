@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Stores transaction info. Parent of Withdrawal and Deposit
+# Stores transaction info
 class Transaction
   attr_reader :amount, :date, :error, :new_balance
 
@@ -17,11 +17,13 @@ class Transaction
 
   def successful?
     return false if withdrawal? && amount_more_than_balance?
+
     valid_transaction_amount? && within_max_limit?
   end
 
   def valid_transaction_amount?(number = @amount)
-    return false if number == 0
+    return false if number.zero?
+
     withdrawal? ? number.negative? : number.positive?
   end
 
@@ -35,7 +37,11 @@ class Transaction
 
   def error_message
     return "Please enter a positive number." unless valid_transaction_amount?
-    return "Unable to process large request. Please speak to your bank manager." unless within_max_limit?
+
+    unless within_max_limit?
+      return "Unable to process large request. "\
+              "Please speak to your bank manager."
+    end
     return "Insufficient funds." if amount_more_than_balance? && withdrawal?
 
     "N/A"
@@ -50,5 +56,4 @@ class Transaction
   def amount_more_than_balance?
     calculate_new_balance.negative?
   end
-
 end

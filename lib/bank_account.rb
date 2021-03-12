@@ -55,5 +55,3 @@ class BankAccount
     Float(number)
   end
 end
-
-

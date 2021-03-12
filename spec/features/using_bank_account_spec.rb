@@ -20,6 +20,28 @@ describe "using the bank account" do
     expect { account.print_statement }.to output(expected).to_stdout
   end
 
+  it "making deposits only" do
+    account.deposit(1000)
+    account.deposit(1.50)
+    account.deposit(4.34567)
+    expected = "#{STATEMENT_HEADER}\n"\
+              "#{Time.now.strftime('%d/%m/%Y')} || 4.35 || || 1005.85\n"\
+              "#{Time.now.strftime('%d/%m/%Y')} || 1.50 || || 1001.50\n"\
+              "#{Time.now.strftime('%d/%m/%Y')} || 1000.00 || || 1000.00\n"
+    expect { account.print_statement }.to output(expected).to_stdout
+  end
+
+  it "making transactions using string inputs" do
+    account.deposit("1000")
+    account.deposit("1.50")
+    account.withdraw("4.34567")
+    expected = "#{STATEMENT_HEADER}\n"\
+              "#{Time.now.strftime('%d/%m/%Y')} || || 4.35 || 997.15\n"\
+              "#{Time.now.strftime('%d/%m/%Y')} || 1.50 || || 1001.50\n"\
+              "#{Time.now.strftime('%d/%m/%Y')} || 1000.00 || || 1000.00\n"
+    expect { account.print_statement }.to output(expected).to_stdout
+  end
+
   it "getting a statement before making transactions" do
     expect { account.print_statement }.to output("No transactions to show.\n").to_stdout
   end
