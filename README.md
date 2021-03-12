@@ -65,11 +65,11 @@ This project has 100% test coverage, according to the SimpleCov gem. Feature/int
 * Statements are also a separate class, which processes a transaction history into a formatted statement to print out.  
 * Although BankAccount is dependent on Transaction and Statement, I decided to keep them separate to optimise the Single Responsibility Principle, and keep class sizes within a reasonable number of lines.
 
+* To improve user experience, it's possible to enter amounts as strings as well as numbers.
 * The user input happens within BankAccount, therefore BankAccount also has the responsibility for sanitising the inputs (arguments) for the deposit and withdraw methods.
-* To improve user experience, it's possible to enter amounts as strings as well as numbers. Of course, decimal amounts are fine.
 * If the user enters an invalid amount for a transaction, they get an appropriate error message printed out. For example, "Insufficient funds." if they try to withdraw more money than is in the account.
-* To be more like a real bank, there's a limit on depositing or withdrawing too much in one go.
 * Unsuccessful transactions are still stored in the transaction history, but they don't show up on the printed statement.   
+* To be more like a real bank, there's a limit on depositing or withdrawing too much in one go.
   
 ### Known issues
 * I'm using Floats for the amounts. This isn't ideal for money because of how rounding works. A quick fix would be to store all the money as Integers in pence, ie x100. And also prevent users from entering more than 2 decimal places for transaction amount.

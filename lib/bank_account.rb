@@ -7,34 +7,28 @@ require_relative "statement"
 class BankAccount
   attr_reader :balance
 
-  def initialize
+  def initialize(transaction = Transaction, statement = Statement)
+    @transaction_class = transaction
+    @statement_class = statement
     @balance = 0
     @transactions = []
   end
 
   def deposit(amount)
-    deposit = create_transaction(sanitise_input(amount))
+    deposit = @transaction_class.new(sanitise_input(amount), @balance)
     process_transaction(deposit)
   end
 
   def withdraw(amount)
-    withdrawal = create_transaction(-sanitise_input(amount))
+    withdrawal = @transaction_class.new(-sanitise_input(amount), @balance)
     process_transaction(withdrawal)
   end
 
   def print_statement
-    puts create_statement.final_output
+    puts @statement_class.new(@transactions).final_output
   end
 
   private #--------------------------------------------------
-
-  def create_transaction(amount)
-    Transaction.new(amount, @balance)
-  end
-
-  def create_statement
-    Statement.new(@transactions)
-  end
 
   def process_transaction(transaction)
     transaction.successful? ? (@balance = transaction.new_balance) : (puts transaction.error)
