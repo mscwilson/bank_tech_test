@@ -4,10 +4,10 @@
 
 A command line bank account app, in Ruby.
 
-![Description](#markdown-header-description)  
-![Installation and Usage](#markdown-header-installation-and-usage)  
-![Technical Details](#markdown-header-technical-details)  
-![Known Issues](#markdown-header-known-issues)  
+[Description](#description)  
+[Installation and Usage](#installation-and-usage)  
+[Technical Details](#technical-details)  
+[Known Issues](#known-issues)  
 
 ## Description
 
