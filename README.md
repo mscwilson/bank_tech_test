@@ -72,7 +72,7 @@ This project has 100% test coverage, according to the SimpleCov gem. Feature/int
 * To be more like a real bank, there's a limit on depositing or withdrawing too much in one go.
   
 ### Known issues
-* I'm using Floats for the amounts. This isn't ideal for money because of how rounding works. A quick fix would be to store all the money as Integers in pence, ie x100. And also prevent users from entering more than 2 decimal places for transaction amount.
-* Not really an issue because it wasn't in the specification anyway, but actually in real banks the limit on depositing or withdrawing too much is capped daily, rather than per transaction. That's not a trivial feature to add as the Transactions don't currently know anything about transaction history.
+* I'm using Floats for the amounts. This isn't ideal for money because of how rounding works. A quick fix would be to store all the money as Integers in pence, ie x100. And also prevent users from entering more than 2 decimal places for the transaction amount.
+* Not really an issue because it wasn't in the specification anyway, but in real banks the limit on depositing or withdrawing too much is capped daily, rather than per transaction. That's not a trivial feature to add as the Transactions don't currently know anything about transaction history.
 
 

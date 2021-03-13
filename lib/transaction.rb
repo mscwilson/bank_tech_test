@@ -7,9 +7,9 @@ class Transaction
   MAXIMUM_DEPOSIT_LIMIT = 10_000
   MAXIMUM_WITHDRAWAL_LIMIT = 2500
 
-  def initialize(amount, balance = 0, type = "deposit")
+  def initialize(amount, balance = 0, type = "deposit", date = Time.now)
     @amount = amount
-    @date = Time.now
+    @date = date
     @balance = balance
     @type = type
     @new_balance = successful? ? calculate_new_balance : @balance
