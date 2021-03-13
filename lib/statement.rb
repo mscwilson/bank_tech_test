@@ -14,10 +14,6 @@ class Statement
     transactions? ? transactions_to_strings.join("\n") : "No transactions to show."
   end
 
-  def transactions?
-    !@transactions.empty?
-  end
-
   def transactions_to_strings
     transaction_strings = [HEADER]
     transactions.reverse.each do |transaction|
@@ -39,8 +35,12 @@ class Statement
       "#{date} || || #{amount} || #{new_balance}"
     end
   end
+  def transactions?
+    !@transactions.empty?
+  end
 
   private #--------------------------------------
+
 
   attr_reader :transactions
 end

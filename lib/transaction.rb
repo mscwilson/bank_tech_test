@@ -7,10 +7,11 @@ class Transaction
   MAXIMUM_DEPOSIT_LIMIT = 10_000
   MAXIMUM_WITHDRAWAL_LIMIT = 2500
 
-  def initialize(amount, balance = 0)
+  def initialize(amount, balance = 0, type = "deposit")
     @amount = amount
     @date = Time.now
     @balance = balance
+    @type = type
     @new_balance = successful? ? calculate_new_balance : @balance
     @error = error_message
   end
@@ -50,7 +51,7 @@ class Transaction
   private #----------------------------------------
 
   def withdrawal?
-    @amount.negative?
+    @type == "withdrawal"
   end
 
   def amount_more_than_balance?

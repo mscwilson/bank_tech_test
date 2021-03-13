@@ -20,7 +20,7 @@ class BankAccount
   end
 
   def withdraw(amount)
-    withdrawal = @transaction_class.new(-sanitise_input(amount), @balance)
+    withdrawal = @transaction_class.new(-sanitise_input(amount), @balance, "withdrawal")
     process_transaction(withdrawal)
   end
 

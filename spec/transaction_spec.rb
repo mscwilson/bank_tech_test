@@ -22,6 +22,18 @@ describe Transaction do
     end
   end
 
+  describe "new_balance" do
+    it "is 0 if withdrawal and more than current balance" do
+
+    end
+
+    it "is 0 if amount given is 0"
+
+    it "is "
+
+
+  end
+
   describe "#successful?" do
     before do
       allow(transaction).to receive(:valid_transaction_amount?).and_return true
@@ -36,11 +48,6 @@ describe Transaction do
 
       it "false if within_max_limit? is false" do
         allow(transaction).to receive(:within_max_limit?).and_return false
-        expect(transaction.successful?).to be false
-      end
-
-      it "false if valid_transaction_amount? is false" do
-        allow(transaction).to receive(:valid_transaction_amount?).and_return false
         expect(transaction.successful?).to be false
       end
     end
@@ -83,44 +90,6 @@ describe Transaction do
     end
   end
 
-  describe "#valid_transaction_amount" do
-    before do
-      allow(transaction).to receive(:within_max_limit?).and_return true
-    end
-
-    it "returns false for 0" do
-      expect(transaction.valid_transaction_amount?(0)).to be false
-    end
-
-    describe "for deposits" do
-      before do
-        allow(transaction).to receive(:withdrawal?).and_return false
-      end
-
-      it "returns true for 100" do
-        expect(transaction.valid_transaction_amount?(DEFAULT_TRANSACTION_AMOUNT)).to be true
-      end
-
-      it "returns false for -100" do
-        expect(transaction.valid_transaction_amount?(-DEFAULT_TRANSACTION_AMOUNT)).to be false
-      end
-    end
-
-    describe "for withdrawals" do
-      before do
-        allow(transaction).to receive(:withdrawal?).and_return true
-      end
-
-      it "returns true for -100" do
-        expect(transaction.valid_transaction_amount?(-DEFAULT_TRANSACTION_AMOUNT)).to be true
-      end
-
-      it "returns false for 100" do
-        expect(transaction.valid_transaction_amount?(DEFAULT_TRANSACTION_AMOUNT)).to be false
-      end
-    end
-  end
-
   describe "#within_max_limit?" do
     it "returns true for 100" do
       expect(transaction.within_max_limit?(DEFAULT_TRANSACTION_AMOUNT)).to be true
@@ -131,7 +100,7 @@ describe Transaction do
     end
 
     it "returns false for 10 000 if withdrawal" do
-      transaction = Transaction.new(-DEFAULT_TRANSACTION_AMOUNT)
+      transaction = Transaction.new(-DEFAULT_TRANSACTION_AMOUNT, 0, "withdrawal")
       expect(transaction.within_max_limit?(Transaction::MAXIMUM_WITHDRAWAL_LIMIT)).to be false
     end
   end
