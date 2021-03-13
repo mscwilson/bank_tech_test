@@ -99,5 +99,4 @@ describe Transaction do
       expect(transaction.error).to eq "Insufficient funds."
     end
   end
-
 end

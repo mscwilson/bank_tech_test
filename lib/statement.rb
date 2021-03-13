@@ -14,9 +14,17 @@ class Statement
     transactions? ? transactions_to_strings.join("\n") : "No transactions to show."
   end
 
+  private #--------------------------------------
+
+  def transactions?
+    return false if @transactions.none? { |transaction| transaction.successful? }
+
+    !@transactions.empty?
+  end
+
   def transactions_to_strings
     transaction_strings = [HEADER]
-    transactions.reverse.each do |transaction|
+    @transactions.reverse.each do |transaction|
       next unless transaction.successful?
 
       transaction_strings << render_single_transaction(transaction)
@@ -35,12 +43,4 @@ class Statement
       "#{date} || || #{amount} || #{new_balance}"
     end
   end
-  def transactions?
-    !@transactions.empty?
-  end
-
-  private #--------------------------------------
-
-
-  attr_reader :transactions
 end

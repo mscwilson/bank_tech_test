@@ -57,7 +57,7 @@ This project was written using Ruby v3.0.0.
 
 ## Technical details
 
-This project has 100% test coverage, according to the SimpleCov gem. Feature/integration and unit tests are included, written in Rspec.  
+This project has 100% test coverage, according to the SimpleCov gem. Feature/integration and unit tests are included, written in Rspec. The unit tests are fully isolated between classes.  
 
 * The main class is BankAccount, which stores the current balance and transaction history, and manages user activities.
 * Making deposits and withdrawals, and printing a statement, are done through BankAccount, providing a nice user experience.
