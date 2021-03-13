@@ -4,6 +4,11 @@
 
 A command line bank account app, in Ruby.
 
+![Description](#markdown-header-description)  
+![Installation and Usage](#markdown-header-installation-and-usage)  
+![Technical Details](#markdown-header-technical-details)  
+![Known Issues](#markdown-header-known-issues)  
+
 ## Description
 
 This project was part of the [Makers Academy](https://makers.tech) coding bootcamp. The goal was to produce the best code possible, as if it were a real tech test for an interview.  
@@ -11,6 +16,7 @@ This project was part of the [Makers Academy](https://makers.tech) coding bootca
 No further development is planned.  
 
 This was the provided specification:  
+
 **Requirements**  
 * You should be able to interact with your code via a REPL like IRB or the JavaScript console. (You don't need to implement a command line interface that takes input from STDIN.)
 * Deposits, withdrawal.
@@ -55,7 +61,7 @@ This project was written using Ruby v3.0.0.
 * Withdraw money using eg `account.withdraw(10)`.
 * Get a bank statement by running `account.print_statement`.
 
-## Technical details
+## Technical Details
 
 This project has 100% test coverage, according to the SimpleCov gem. Feature/integration and unit tests are included, written in Rspec. The unit tests are fully isolated between classes.  
 
@@ -65,13 +71,13 @@ This project has 100% test coverage, according to the SimpleCov gem. Feature/int
 * Statements are also a separate class, which processes a transaction history into a formatted statement to print out.  
 * Although BankAccount is dependent on Transaction and Statement, I decided to keep them separate to optimise the Single Responsibility Principle, and keep class sizes within a reasonable number of lines.
 
-* To improve user experience, it's possible to enter amounts as strings as well as numbers.
+* To improve user experience, it's possible to enter amounts as string numbers ("100") as well as numbers (100).
 * The user input happens within BankAccount, therefore BankAccount also has the responsibility for sanitising the inputs (arguments) for the deposit and withdraw methods.
 * If the user enters an invalid amount for a transaction, they get an appropriate error message printed out. For example, "Insufficient funds." if they try to withdraw more money than is in the account.
 * Unsuccessful transactions are still stored in the transaction history, but they don't show up on the printed statement.   
 * To be more like a real bank, there's a limit on depositing or withdrawing too much in one go.
   
-### Known issues
+### Known Issues
 * I'm using Floats for the amounts. This isn't ideal for money because of how rounding works. A quick fix would be to store all the money as Integers in pence, ie x100. And also prevent users from entering more than 2 decimal places for the transaction amount.
 * Not really an issue because it wasn't in the specification anyway, but in real banks the limit on depositing or withdrawing too much is capped daily, rather than per transaction. That's not a trivial feature to add as the Transactions don't currently know anything about transaction history.
 
