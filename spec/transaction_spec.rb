@@ -23,91 +23,81 @@ describe Transaction do
   end
 
   describe "new_balance" do
-    it "is 0 if withdrawal and more than current balance" do
-
+    it "same as starting balance if unsuccessful" do
+      transaction = Transaction.new(-DEFAULT_TRANSACTION_AMOUNT)
+      expect(transaction.new_balance).to eq 0
     end
 
-    it "is 0 if amount given is 0"
+    it "increased compared to starting balance for a deposit" do
+      transaction = Transaction.new(DEFAULT_TRANSACTION_AMOUNT)
+      expect(transaction.new_balance).to eq DEFAULT_TRANSACTION_AMOUNT
+    end
 
-    it "is "
-
-
+    it "decreased compared to starting balance for a withdrawal" do
+      limit = Transaction::MAXIMUM_WITHDRAWAL_LIMIT
+      transaction = Transaction.new(-DEFAULT_TRANSACTION_AMOUNT, limit, "withdrawal")
+      expect(transaction.new_balance).to eq(limit - DEFAULT_TRANSACTION_AMOUNT)
+    end
   end
 
   describe "#successful?" do
-    before do
-      allow(transaction).to receive(:valid_transaction_amount?).and_return true
-      allow(transaction).to receive(:within_max_limit?).and_return true
-      allow(transaction).to receive(:withdrawal?).and_return false
-    end
-
-    describe "deposits" do
-      it "true if valid_transaction_amount? is true" do
-        expect(transaction.successful?).to be true
+    describe "deposits false if" do
+      it "amount given is 0" do
+        transaction = Transaction.new(0)
+        expect(transaction.successful?).to be false
       end
 
-      it "false if within_max_limit? is false" do
-        allow(transaction).to receive(:within_max_limit?).and_return false
+      it "deposit but given a negative number" do
+        transaction = Transaction.new(-DEFAULT_TRANSACTION_AMOUNT)
+        expect(transaction.successful?).to be false
+      end
+
+      it "deposit but outside max range" do
+        transaction = Transaction.new(Transaction::MAXIMUM_DEPOSIT_LIMIT)
         expect(transaction.successful?).to be false
       end
     end
 
-    describe "withdrawals also" do
-      it "false if amount_more_than_balance?" do
-        allow(transaction).to receive(:withdrawal?).and_return true
-        allow(transaction).to receive(:amount_more_than_balance?).and_return true
+    describe "withdrawals also false if" do
+      it "more than current balance" do
+        transaction = Transaction.new(-(DEFAULT_TRANSACTION_AMOUNT + 1), DEFAULT_TRANSACTION_AMOUNT, "withdrawal")
+        expect(transaction.successful?).to be false
+      end
+
+      it "outside max range" do
+        limit = Transaction::MAXIMUM_WITHDRAWAL_LIMIT
+        transaction = Transaction.new(limit, limit + 1, "withdrawal")
         expect(transaction.successful?).to be false
       end
     end
   end
 
-  describe "#error_message" do
-    before do
-      allow(transaction).to receive(:withdrawal?).and_return false
-      allow(transaction).to receive(:valid_transaction_amount?).and_return true
-      allow(transaction).to receive(:within_max_limit?).and_return true
+  describe "error" do
+    it "N/A if no problem with transaction" do
+      transaction = Transaction.new(DEFAULT_TRANSACTION_AMOUNT)
+      expect(transaction.error).to eq "N/A"
     end
 
-    it "'unable to process large amount' if within_max_limit? false" do
-      allow(transaction).to receive(:within_max_limit?).and_return false
-      expect(transaction.error_message).to eq "Unable to process large request. Please speak to your bank manager."
+    it "'enter a positive number' if given 0" do
+      transaction = Transaction.new(0)
+      expect(transaction.error).to eq "Please enter a positive number."
     end
 
-    it "'enter a positive number' if valid_transaction_amount? false" do
-      allow(transaction).to receive(:valid_transaction_amount?).and_return false
-      expect(transaction.error_message).to eq "Please enter a positive number."
+    it "'enter a positive number' if given a negative deposit amount" do
+      transaction = Transaction.new(-DEFAULT_TRANSACTION_AMOUNT)
+      expect(transaction.error).to eq "Please enter a positive number."
     end
 
-    it "'Insufficient funds' if amount_more_than_balance?" do
-      allow(transaction).to receive(:withdrawal?).and_return true
-      allow(transaction).to receive(:amount_more_than_balance?).and_return true
-      expect(transaction.error_message).to eq "Insufficient funds."
+    it "'Unable to process' deposit outside max range" do
+      transaction = Transaction.new(Transaction::MAXIMUM_DEPOSIT_LIMIT)
+      expect(transaction.error).to eq "Unable to process large request. "\
+                                      "Please speak to your bank manager."
     end
 
-    it "'N/A' if transaction successful?" do
-      allow(transaction).to receive(:successful?).and_return true
-      expect(transaction.error_message).to eq "N/A"
-    end
-  end
-
-  describe "#within_max_limit?" do
-    it "returns true for 100" do
-      expect(transaction.within_max_limit?(DEFAULT_TRANSACTION_AMOUNT)).to be true
-    end
-
-    it "returns false for 10 000 if deposit" do
-      expect(transaction.within_max_limit?(Transaction::MAXIMUM_DEPOSIT_LIMIT)).to be false
-    end
-
-    it "returns false for 10 000 if withdrawal" do
+    it "'insufficient funds' if withdrawal more than balance" do
       transaction = Transaction.new(-DEFAULT_TRANSACTION_AMOUNT, 0, "withdrawal")
-      expect(transaction.within_max_limit?(Transaction::MAXIMUM_WITHDRAWAL_LIMIT)).to be false
+      expect(transaction.error).to eq "Insufficient funds."
     end
   end
 
-  describe "#calculate_new_balance" do
-    it "adds current balance and transaction amount" do
-      expect(transaction.calculate_new_balance).to eq DEFAULT_TRANSACTION_AMOUNT
-    end
-  end
 end

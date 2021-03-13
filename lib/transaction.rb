@@ -22,6 +22,16 @@ class Transaction
     valid_transaction_amount? && within_max_limit?
   end
 
+  private #----------------------------------------
+
+  def withdrawal?
+    @type == "withdrawal"
+  end
+
+  def amount_more_than_balance?
+    calculate_new_balance.negative?
+  end
+
   def valid_transaction_amount?(number = @amount)
     return false if number.zero?
 
@@ -46,15 +56,5 @@ class Transaction
     return "Insufficient funds." if amount_more_than_balance? && withdrawal?
 
     "N/A"
-  end
-
-  private #----------------------------------------
-
-  def withdrawal?
-    @type == "withdrawal"
-  end
-
-  def amount_more_than_balance?
-    calculate_new_balance.negative?
   end
 end
